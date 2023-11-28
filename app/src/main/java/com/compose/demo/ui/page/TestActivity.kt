@@ -15,7 +15,7 @@ import com.compose.demo.nav.MyNavigation
 enum class NavTag {
     NavPage, SimpleScrollView, SimpleCirculatePager,
     SimpleDraggableList,SimpleSeekbar,SimplePanelLayout,
-    SimpleShape
+    SimpleShape,SimpleTheme
 }
 
 class TestActivity : ComponentActivity() {
@@ -59,6 +59,11 @@ class TestActivity : ComponentActivity() {
                         SimpleShape()
                     }
                 }
+                composable(NavTag.SimpleTheme.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleTheme()
+                    }
+                }
             }
         }
     }
@@ -84,6 +89,9 @@ fun NavPage(navTo: (tag: String) -> Unit) {
         }
         Button(onClick = { navTo(NavTag.SimpleShape.name) }) {
             Text(text = "CustomShape")
+        }
+        Button(onClick = { navTo(NavTag.SimpleTheme.name) }) {
+            Text(text = "CustomTheme")
         }
     }
 }
