@@ -143,11 +143,13 @@ fun CustomSeekBar(
         thumbContent(modifierThumb)
     }
 }
+
 /**
  * @param modifier 的长宽等为最外层的属性，比如给进度条整体增加边框，设置进图条的占位宽高等
  * @param currentProgress 当前进度
  * @param totalProgress 总进度
- * @param step 步长
+ * @param step 步长,最小的可移动刻度
+ * @param lineStep 如果在没有自定义背景的情况下可以使用这个参数设置背景长线的间隔的刻度
  * @param thumbColor 按钮颜色，如果没有自定义thumbContent，可以使用这个参数修改默认样式的按钮颜色
  * @param barHeight 进度条的bar的前景和背景的高度
  * @param barBgColor 进度条背景色，如果没有自定义barBgContent,可以使用这个参数修改默认样式的进度条背景色
@@ -161,46 +163,58 @@ fun CustomStepSeekBar(
     currentProgress: MutableState<Int>,
     totalProgress: Int = 100,
     step: Int = 10,
+    lineStep: Int = 10,
     thumbColor: Color = Color.Blue,
-    thumbOffset: Dp = 15.dp,
     barHeight: Dp = 10.dp,
     barBgColor: Color = Color.LightGray,
     barBgContent: @Composable () -> Unit = {
         Canvas(modifier = Modifier
             .fillMaxWidth()
-            .height(barHeight)
-            , onDraw = {
-                val sStep = size.width / totalProgress
-                val bStep = sStep * step
-                var offsetX = 0f
-                while (offsetX <= size.width) {
+            .height(barHeight), onDraw = {
+            val sStep = size.width / totalProgress
+            val bStep = sStep * lineStep
+            val mStep = sStep * step
+            var offsetX = 0f
+            while (offsetX <= size.width) {
 
-                    drawLine(
-                        color = barBgColor,
-                        Offset(offsetX, size.height - (size.height)*0.2f),
-                        Offset(offsetX, size.height),
-                        strokeWidth = 1f
-                    )
+                drawLine(
+                    color = barBgColor,
+                    Offset(offsetX, size.height - (size.height) * 0.2f),
+                    Offset(offsetX, size.height),
+                    strokeWidth = 1f
+                )
 
-                    offsetX += sStep
-                }
-                offsetX = 0f;
-                while (offsetX <= size.width) {
-                    drawLine(
-                        color = barBgColor,
-                        Offset(offsetX, size.height - (size.height)*0.5f),
-                        Offset(offsetX, size.height),
-                        strokeWidth = 2f
-                    )
-                    offsetX += bStep
-                }
-            })
+                offsetX += sStep
+            }
+            offsetX = 0f
+            while (offsetX <= size.width) {
+
+                drawLine(
+                    color = barBgColor,
+                    Offset(offsetX, size.height - (size.height) * 0.35f),
+                    Offset(offsetX, size.height),
+                    strokeWidth = 1f
+                )
+
+                offsetX += mStep
+            }
+            offsetX = 0f;
+            while (offsetX <= size.width) {
+                drawLine(
+                    color = barBgColor,
+                    Offset(offsetX, size.height - (size.height) * 0.5f),
+                    Offset(offsetX, size.height),
+                    strokeWidth = 2f
+                )
+                offsetX += bStep
+            }
+        })
     },
     thumbContent: @Composable (modifier: Modifier) -> Unit = {
         Box(
             it
                 .height(barHeight)
-                .padding(top=5.dp)
+                .padding(top = 5.dp)
                 .width(30.dp), contentAlignment = Alignment.TopCenter
         ) {
             Box(
@@ -259,7 +273,7 @@ fun CustomStepSeekBar(
             thumbSizePx.value = it.size.width.toFloat()
         }
         .offset {
-            IntOffset(animOffset.value-(thumbSizePx.value/2).toInt(), 0)
+            IntOffset(animOffset.value - (thumbSizePx.value / 2).toInt(), 0)
         }
         .draggable(
             state = state,
