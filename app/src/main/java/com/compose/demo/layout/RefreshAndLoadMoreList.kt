@@ -157,7 +157,7 @@ fun <T> RefreshAndLoadMoreList(
         }
     }
     if (listState.isScrollInProgress) {
-        if (canLoadMore && !listState.canScrollForward && listState.firstVisibleItemIndex != 0) {
+        if (canLoadMore && !listState.canScrollForward) {
             if (!state.value.onLoading!!.value) {
                 state.value.onLoading!!.value = true
                 scope.launch {
@@ -166,7 +166,7 @@ fun <T> RefreshAndLoadMoreList(
                 }
             }
         }
-        if (canRefresh && !listState.canScrollBackward && listState.firstVisibleItemIndex == 0) {
+        if (canRefresh && !listState.canScrollBackward) {
             if (!state.value.onRefresh!!.value) {
                 state.value.onRefresh!!.value = true
                 scope.launch {
