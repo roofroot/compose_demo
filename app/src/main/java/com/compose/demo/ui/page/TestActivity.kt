@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -164,7 +165,7 @@ fun Cards(navTag: NavTag, text: String, navTo: (tag: String) -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color.White, shape = WaveBorderShape(10.dp, 5.dp)),
+                .clip( shape = WaveBorderShape(10.dp, 5.dp)).background(Color.White),
             contentAlignment = Alignment.Center
         ) {
             GradientText(
