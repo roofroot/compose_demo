@@ -91,11 +91,15 @@ fun SimpleSeekbar() {
 
                 }
             })
+        val progressStep = remember {
+            mutableStateOf(0)
+        }
+        Text("当前进度:${progressStep.value}%")
         CustomStepSeekBar(
             modifier = Modifier
                 .width(800.dp),
             barHeight = 40.dp,
-            currentProgress = progress,
+            currentProgress = progressStep,
             barBgColor = palevioletred,
             step = 5,
             thumbColor = mediumvioletred

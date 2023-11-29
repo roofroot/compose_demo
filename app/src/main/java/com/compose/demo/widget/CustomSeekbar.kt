@@ -143,7 +143,18 @@ fun CustomSeekBar(
         thumbContent(modifierThumb)
     }
 }
-
+/**
+ * @param modifier 的长宽等为最外层的属性，比如给进度条整体增加边框，设置进图条的占位宽高等
+ * @param currentProgress 当前进度
+ * @param totalProgress 总进度
+ * @param step 步长
+ * @param thumbColor 按钮颜色，如果没有自定义thumbContent，可以使用这个参数修改默认样式的按钮颜色
+ * @param barHeight 进度条的bar的前景和背景的高度
+ * @param barBgColor 进度条背景色，如果没有自定义barBgContent,可以使用这个参数修改默认样式的进度条背景色
+ * @param barBgContent 自定义的进度条背景
+ * @param thumbContent  @Composable (modifier: Modifier) 需要使用modifier,作为自定义thumb的modifier，
+ *                      这样才能使按钮随着拖动改变位置
+ */
 @Composable
 fun CustomStepSeekBar(
     modifier: Modifier,
