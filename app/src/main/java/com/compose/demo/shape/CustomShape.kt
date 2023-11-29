@@ -243,3 +243,21 @@ class FlowerShape(
         return Outline.Generic(path)
     }
 }
+class TriangleShape(
+) : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        var rect = Rect(
+            0f, 0f, size.width, size.height
+        )
+        var path = Path();
+        path.moveTo(rect.left, rect.top)
+        path.lineTo(rect.right, rect.top)
+        path.lineTo(rect.size.width / 2, rect.bottom)
+        path.close()
+        return Outline.Generic(path)
+    }
+}

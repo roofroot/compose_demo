@@ -26,10 +26,13 @@ import com.compose.demo.ui.theme.khaki
 import com.compose.demo.ui.theme.lavender
 import com.compose.demo.ui.theme.lightyellow
 import com.compose.demo.ui.theme.mediumorchid
+import com.compose.demo.ui.theme.mediumvioletred
+import com.compose.demo.ui.theme.palevioletred
 import com.compose.demo.ui.theme.plum
 import com.compose.demo.ui.theme.thistle
 import com.compose.demo.ui.theme.yellow
 import com.compose.demo.widget.CustomSeekBar
+import com.compose.demo.widget.CustomStepSeekBar
 
 @Composable
 fun SimpleSeekbar() {
@@ -88,5 +91,15 @@ fun SimpleSeekbar() {
 
                 }
             })
+        CustomStepSeekBar(
+            modifier = Modifier
+                .width(800.dp),
+            barHeight = 40.dp,
+            currentProgress = progress,
+            barBgColor = palevioletred,
+            step = 5,
+            thumbColor = mediumvioletred
+        )
+
     }
 }

@@ -2,18 +2,23 @@ package com.compose.demo.widget
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.interaction.DragInteraction
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
@@ -28,6 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.compose.demo.shape.TriangleShape
 import kotlin.math.roundToInt
 
 /**
@@ -133,6 +140,128 @@ fun CustomSeekBar(
     ) {
         barBgContent()
         barFgContent(animFgWidth.value)
+        thumbContent(modifierThumb)
+    }
+}
+
+@Composable
+fun CustomStepSeekBar(
+    modifier: Modifier,
+    currentProgress: MutableState<Int>,
+    totalProgress: Int = 100,
+    step: Int = 10,
+    thumbColor: Color = Color.Blue,
+    thumbOffset: Dp = 15.dp,
+    barHeight: Dp = 10.dp,
+    barBgColor: Color = Color.LightGray,
+    barBgContent: @Composable () -> Unit = {
+        Canvas(modifier = Modifier
+            .fillMaxWidth()
+            .height(barHeight)
+            , onDraw = {
+                val sStep = size.width / totalProgress
+                val bStep = sStep * step
+                var offsetX = 0f
+                while (offsetX <= size.width) {
+
+                    drawLine(
+                        color = barBgColor,
+                        Offset(offsetX, size.height - (size.height)*0.2f),
+                        Offset(offsetX, size.height),
+                        strokeWidth = 1f
+                    )
+
+                    offsetX += sStep
+                }
+                offsetX = 0f;
+                while (offsetX <= size.width) {
+                    drawLine(
+                        color = barBgColor,
+                        Offset(offsetX, size.height - (size.height)*0.5f),
+                        Offset(offsetX, size.height),
+                        strokeWidth = 2f
+                    )
+                    offsetX += bStep
+                }
+            })
+    },
+    thumbContent: @Composable (modifier: Modifier) -> Unit = {
+        Box(
+            it
+                .height(barHeight)
+                .padding(top=5.dp)
+                .width(30.dp), contentAlignment = Alignment.TopCenter
+        ) {
+            Box(
+                Modifier
+                    .shadow(5.dp, shape = TriangleShape())
+                    .width(10.dp)
+                    .height(8.dp)
+                    .clip(TriangleShape())
+                    .background(thumbColor)
+            ) {
+
+            }
+        }
+
+    }
+) {
+    val size = remember {
+        mutableStateOf(IntSize(0, 0))
+    }
+    val fgWidth = remember {
+        mutableStateOf(0.dp)
+    }
+    val animFgWidth = animateDpAsState(targetValue = fgWidth.value)
+    val offset = remember {
+        mutableStateOf(0f)
+    }
+    val thumbSizePx = remember {
+        mutableStateOf(0f)
+    }
+
+    val animOffset = animateIntAsState(targetValue = offset.value.roundToInt())
+    offset.value = (size.value.width.toFloat()) / totalProgress * currentProgress.value
+    val interactionSource = remember {
+        MutableInteractionSource()
+    }
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect {
+            when (it) {
+                is DragInteraction.Stop -> {
+                    currentProgress.value =
+                        ((currentProgress.value.toFloat() / step).roundToInt() * step)
+                }
+            }
+        }
+    }
+
+    val state = rememberDraggableState(onDelta = {
+        if (offset.value + it > 0 && offset.value + it < size.value.width) {
+            offset.value += it
+        }
+        currentProgress.value =
+            (totalProgress * (offset.value / (size.value.width))).roundToInt()
+    })
+    var modifierThumb = Modifier
+        .onPlaced {
+            thumbSizePx.value = it.size.width.toFloat()
+        }
+        .offset {
+            IntOffset(animOffset.value-(thumbSizePx.value/2).toInt(), 0)
+        }
+        .draggable(
+            state = state,
+            orientation = Orientation.Horizontal,
+            interactionSource = interactionSource
+        )
+    Box(
+        modifier
+            .onPlaced {
+                size.value = it.size
+            }, contentAlignment = Alignment.CenterStart
+    ) {
+        barBgContent()
         thumbContent(modifierThumb)
     }
 }
