@@ -156,6 +156,7 @@ fun Cards(navTag: NavTag, text: String, navTo: (tag: String) -> Unit) {
             .size(200.dp)
             .padding(10.dp)
             .background(brush = Brush.sweepGradient(listOf(plum, lavender, mediumturquoise, plum)))
+            .shadow(10.dp)
             .clickable {
                 navTo(navTag.name)
             },
@@ -163,7 +164,6 @@ fun Cards(navTag: NavTag, text: String, navTo: (tag: String) -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .shadow(5.dp)
                 .background(color = Color.White, shape = WaveBorderShape(10.dp, 5.dp)),
             contentAlignment = Alignment.Center
         ) {
