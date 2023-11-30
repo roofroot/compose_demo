@@ -149,10 +149,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                 7 -> {
                     Cards(
                         navTag = NavTag.SimpleShape,
-                        text = "CustomShape djlfjsdlkfjldsjflkdsjfldsjfljdslfjd" +
-                                "sljflsdjflsdjlfjsdlfjsdlfjlsd" +
-                                "fdlfjdlsjfldsjfldsjflsdjflsdjfldsjf" +
-                                "dljsfjldsjfldsjflsdjflsdjflsjf",
+                        text = "CustomShape",
                         navTo = navTo
                     )
                 }
