@@ -3,17 +3,15 @@ package com.compose.demo.widget
 import android.graphics.fonts.FontStyle
 import android.util.Log
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement.Top
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.LinearGradient
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
@@ -26,6 +24,8 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.sp
 
 
+enum class GradientOrientation { Vertical, Horizontal, Line }
+
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun GradientText(
@@ -34,6 +34,7 @@ fun GradientText(
     maxLines: Int = Int.MAX_VALUE,
     brashColors: List<Color>? = null,
     brashTileMode: TileMode = TileMode.Clamp,
+    gradientOrientation: GradientOrientation = GradientOrientation.Horizontal,
     alignment: Alignment = Alignment.Center,
     textStyle: TextStyle = TextStyle(fontSize = 15.sp, color = Color.Black),
     autoFixed: Boolean = true
@@ -101,18 +102,54 @@ fun GradientText(
                 style = textStyle.copy(fontSize = mFontSize.sp)
             )
             brashColors?.let {
-                val brash = Brush.linearGradient(
-                    start = Offset(offsetX, offsetY),
-                    end = Offset(offsetX + layout.size.width, offsetY),
-                    colors = it,
-                    tileMode = brashTileMode
-                )
-
-                drawRect(
-                    brush = brash,
-                    blendMode = BlendMode.SrcIn,
-
+                var brush: Brush? = null
+                if (gradientOrientation == GradientOrientation.Horizontal) {
+                    brush = Brush.linearGradient(
+                        start = Offset(offsetX, offsetY),
+                        end = Offset(offsetX + layout.size.width, offsetY),
+                        colors = it,
+                        tileMode = brashTileMode
                     )
+                    drawRect(
+                        brush = brush!!,
+                        blendMode = BlendMode.SrcIn,
+                    )
+                } else if (gradientOrientation == GradientOrientation.Vertical) {
+                    brush = Brush.linearGradient(
+                        start = Offset(offsetX + layout.size.width / 2, offsetY),
+                        end = Offset(
+                            offsetX + layout.size.width / 2,
+                            offsetY + layout.size.height
+                        ),
+                        colors = it,
+                        tileMode = brashTileMode
+                    )
+                    drawRect(
+                        brush = brush!!,
+                        blendMode = BlendMode.SrcIn,
+                    )
+                } else {
+                    val list = ArrayList<Color>()
+                    for (i in 0 until layout.lineCount) {
+                        list.addAll(it)
+                    }
+                    brush = Brush.linearGradient(
+                        start = Offset(offsetX + layout.size.width / 2, offsetY),
+                        end = Offset(
+                            offsetX + layout.size.width / 2,
+                            offsetY + layout.size.height
+                        ),
+                        colors = list,
+                        tileMode = brashTileMode
+                    )
+                    drawRect(
+                        brush = brush!!,
+                        blendMode = BlendMode.SrcIn,
+                    )
+
+                }
+
+
                 canvas.restore()
             }
         }

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,6 +41,7 @@ import com.compose.demo.ui.theme.mediumturquoise
 import com.compose.demo.ui.theme.pink
 import com.compose.demo.ui.theme.plum
 import com.compose.demo.ui.theme.white
+import com.compose.demo.widget.GradientOrientation
 import com.compose.demo.widget.GradientText
 
 enum class NavTag {
@@ -147,7 +149,10 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                 7 -> {
                     Cards(
                         navTag = NavTag.SimpleShape,
-                        text = "CustomShape",
+                        text = "CustomShape djlfjsdlkfjldsjflkdsjfldsjfljdslfjd" +
+                                "sljflsdjflsdjlfjsdlfjsdlfjlsd" +
+                                "fdlfjdlsjfldsjfldsjflsdjflsdjfldsjf" +
+                                "dljsfjldsjfldsjflsdjflsdjflsjf",
                         navTo = navTo
                     )
                 }
@@ -180,8 +185,12 @@ fun Cards(navTag: NavTag, text: String, navTo: (tag: String) -> Unit) {
             GradientText(
                 modifier = Modifier
                     .width(150.dp)
-                    .height(150.dp), text = text, brashColors =
-                listOf(pink, black, pink), maxLines = 1
+                    .height(150.dp),
+                text = text,
+                brashColors =
+                listOf(pink, black, pink),
+                maxLines = 5,
+                gradientOrientation = GradientOrientation.Line
             )
         }
     }
