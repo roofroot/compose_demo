@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.LinearGradient
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
@@ -32,10 +33,13 @@ import com.compose.demo.layout.PanelLayout
 import com.compose.demo.nav.MyNavigation
 import com.compose.demo.shape.WaveBorderShape
 import com.compose.demo.ui.theme.black
+import com.compose.demo.ui.theme.green
 import com.compose.demo.ui.theme.lavender
 import com.compose.demo.ui.theme.lightpink
 import com.compose.demo.ui.theme.mediumturquoise
+import com.compose.demo.ui.theme.pink
 import com.compose.demo.ui.theme.plum
+import com.compose.demo.ui.theme.white
 import com.compose.demo.widget.GradientText
 
 enum class NavTag {
@@ -141,7 +145,11 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                 }
 
                 7 -> {
-                    Cards(navTag = NavTag.SimpleShape, text = "CustomShape", navTo = navTo)
+                    Cards(
+                        navTag = NavTag.SimpleShape,
+                        text = "CustomShape",
+                        navTo = navTo
+                    )
                 }
             }
 
@@ -165,15 +173,15 @@ fun Cards(navTag: NavTag, text: String, navTo: (tag: String) -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .clip( shape = WaveBorderShape(10.dp, 5.dp)).background(Color.White),
+                .clip(shape = WaveBorderShape(10.dp, 5.dp))
+                .background(Color.White),
             contentAlignment = Alignment.Center
         ) {
             GradientText(
                 modifier = Modifier
                     .width(150.dp)
-                    .height(80.dp), text = text, brash = Brush.linearGradient(
-                    listOf(lightpink, black, lightpink)
-                )
+                    .height(150.dp), text = text, brashColors =
+                listOf(pink, black, pink), maxLines = 1
             )
         }
     }
