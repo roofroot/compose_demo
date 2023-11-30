@@ -35,7 +35,7 @@ fun GradientText(
     brashColors: List<Color>? = null,
     brashTileMode: TileMode = TileMode.Clamp,
     alignment: Alignment = Alignment.Center,
-    textStyle: TextStyle = TextStyle(fontSize = 15.sp),
+    textStyle: TextStyle = TextStyle(fontSize = 15.sp, color = Color.Black),
     autoFixed: Boolean = true
 ) {
     val mTextMeasurer = rememberTextMeasurer()
@@ -87,23 +87,20 @@ fun GradientText(
                 offsetY = size.height - layout.size.height
                 offsetX = size.width - layout.size.width
             }
-
+            canvas.saveLayer(
+                Rect(
+                    Offset.Zero,
+                    size
+                ), paint = Paint()
+            )
+            drawText(
+                textMeasurer = mTextMeasurer,
+                text = text,
+                maxLines = maxLines,
+                topLeft = Offset(offsetX, offsetY),
+                style = textStyle.copy(fontSize = mFontSize.sp)
+            )
             brashColors?.let {
-                val p = Paint()
-                canvas.saveLayer(
-                    Rect(
-                        Offset.Zero,
-                        size,
-                    ), Paint()
-                )
-                drawText(
-                    textMeasurer = mTextMeasurer,
-                    text = text,
-                    maxLines = maxLines,
-                    topLeft = Offset(offsetX, offsetY),
-                    style = textStyle.copy(fontSize = mFontSize.sp)
-                )
-
                 val brash = Brush.linearGradient(
                     start = Offset(offsetX, offsetY),
                     end = Offset(offsetX + layout.size.width, offsetY),
