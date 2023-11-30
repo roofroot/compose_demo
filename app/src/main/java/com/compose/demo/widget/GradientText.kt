@@ -7,6 +7,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -21,7 +22,8 @@ import androidx.compose.ui.unit.sp
 fun GradientText(
     modifier: Modifier,
     text: String,
-    brash: Brush,
+    brash: Brush? = null,
+    color: Color = Color.Black,
     fontSize: TextUnit = 20.sp,
     autoFixed: Boolean = true
 ) {
@@ -35,7 +37,9 @@ fun GradientText(
                 maxLines = 1,
                 style = TextStyle(fontSize = fontSize)
             )
-            canvas.saveLayer(Rect(Offset.Zero, size), Paint())
+            if (Brush != null) {
+                canvas.saveLayer(Rect(Offset.Zero, size), Paint())
+            }
             if (layout.size.width > size.width && autoFixed) {
                 while (true) {
                     mFontSize = (mFontSize.value - 1).sp
@@ -57,15 +61,16 @@ fun GradientText(
                     if (size.width > layout.size.width)
                         ((size.width - layout.size.width) / 2) else 0f,
                     (size.height - layout.size.height) / 2
-                ), style = TextStyle(fontSize = mFontSize)
+                ), style = TextStyle(color = color, fontSize = mFontSize)
             )
-            // 3. 在矩形中绘制一个渐变色
-            drawRect(
-                brush = brash,
-                blendMode = BlendMode.SrcIn
-            )
-            // 5. 将图层合成到 canvas 的原始图像上
-            canvas.restore()
+            brash?.let {
+                // 3. 在矩形中绘制一个渐变色
+                drawRect(
+                    brush = brash,
+                    blendMode = BlendMode.SrcIn
+                )
+                canvas.restore()
+            }
         }
     }
 }
