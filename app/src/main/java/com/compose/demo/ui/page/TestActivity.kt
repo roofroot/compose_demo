@@ -189,8 +189,7 @@ fun Cards(navTag: NavTag, text: String, navTo: (tag: String) -> Unit) {
                 text = text,
                 brashColors =
                 listOf(pink, black, pink),
-                maxLines = 5,
-                gradientOrientation = GradientOrientation.Line
+                maxLines = 1,
             )
         }
     }
