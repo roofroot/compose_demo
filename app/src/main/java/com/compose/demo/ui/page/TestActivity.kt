@@ -47,7 +47,7 @@ import com.compose.demo.widget.GradientText
 enum class NavTag {
     NavPage, SimpleScrollView, SimpleCirculatePager,
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
-    SimpleShape, SimpleRefreshAndLoadMoreList
+    SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableListOffsetAnim
 }
 
 class TestActivity : ComponentActivity() {
@@ -96,6 +96,11 @@ class TestActivity : ComponentActivity() {
                         SimpleRefreshAndLoadList()
                     }
                 }
+                composable(NavTag.SimpleDraggableListOffsetAnim.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleDraggableLazyListOffsetAnim()
+                    }
+                }
             }
         }
     }
@@ -104,7 +109,7 @@ class TestActivity : ComponentActivity() {
 @Composable
 fun NavPage(navTo: (tag: String) -> Unit) {
     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(5)) {
-        items(8) {
+        items(9) {
             when (it) {
                 0 -> {
                     Cards(
@@ -150,6 +155,14 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                     Cards(
                         navTag = NavTag.SimpleShape,
                         text = "CustomShape",
+                        navTo = navTo
+                    )
+                }
+
+                8 -> {
+                    Cards(
+                        navTag = NavTag.SimpleDraggableListOffsetAnim,
+                        text = "DraggableListOffsetAnim",
                         navTo = navTo
                     )
                 }
