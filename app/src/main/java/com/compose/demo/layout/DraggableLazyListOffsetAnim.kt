@@ -406,11 +406,7 @@ fun <T> DraggableInsertLazyGrid(
                         offsetx.value = 0
                     }
                 }
-//                if (moveItemVisible.value) {
                 modifier = modifier.then(modifierOffset)
-//                } else {
-//                    modifier.offset { IntOffset(0, 0) }
-//                }
 
                 Box(
                     modifier.alpha(if (moveIndex.value != index || !moveItemVisible.value) 1f else 0f)
