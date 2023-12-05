@@ -94,7 +94,7 @@ fun SimpleSeekbar() {
         val progressStep = remember {
             mutableStateOf(0)
         }
-        Text("当前刻度:${progressStep.value}%")
+        Text(" 当前刻度:${progressStep.value}% ")
         CustomStepSeekBar(
             modifier = Modifier
                 .width(800.dp),
