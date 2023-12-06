@@ -1,11 +1,9 @@
-package com.compose.demo.layout
+package com.desaysv.hmicomponents.compose_lib.layout
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
@@ -34,15 +32,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.compose.demo.util.LogUtil
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T> DraggableInsertLazyColumn(
     modifier: Modifier = Modifier,
-    data: MutableList<T>,
+    data: List<T>,
+    onExchangeEnd: (sourceIndex: Int, targetIndex: Int) -> Unit,
     hoverItemContent: @Composable (item: T, index: Int) -> Unit,
     itemContent: @Composable (item: T, index: Int, modifier: Modifier) -> Unit
 ) {
@@ -100,18 +99,10 @@ fun <T> DraggableInsertLazyColumn(
                     offsetY.value = 0f
                     moveItemVisible.value = false
                 }, onDragEnd = {
-//                    offsetY.value = -1000f
-
                     moveItemVisible.value = false
-
-
-                    Log.e(
-                        "ccccccccccccc",
+                    LogUtil.I(
                         changeIndex.value.toString() + "," + moveIndex.value.toString()
                     )
-                    val temp = data.get(moveIndex.value)
-                    data.removeAt(moveIndex.value)
-                    data.add(changeIndex.value, temp)
                 }) { change, dragAmount ->
 
                     val offset =
@@ -126,8 +117,7 @@ fun <T> DraggableInsertLazyColumn(
                         index = data.size - 1
                     }
                     changeIndex.value = index
-                    Log.e(
-                        "ccccccccccccc",
+                    LogUtil.I(
                         changeIndex.value.toString() + "," + moveIndex.value.toString() + "," + itemHeight.value
                     )
 
@@ -165,9 +155,9 @@ fun <T> DraggableInsertLazyColumn(
                 var modifierOffset = Modifier.offset {
                     IntOffset(0, animOffsetY.value)
                 }
-//                if (moveItemVisible.value) {
+
                 modifier = modifier.then(modifierOffset)
-//                }
+
 
                 if (moveItemVisible.value) {
 
@@ -229,6 +219,7 @@ fun <T> DraggableInsertLazyGrid(
     modifier: Modifier = Modifier,
     columCount: Int = 3,
     data: MutableList<T>,
+    onExchangeEnd: (sourceIndex: Int, targetIndex: Int) -> Unit,
     hoverItemContent: @Composable (item: T, index: Int) -> Unit,
     itemContent: @Composable (item: T, index: Int, modifier: Modifier) -> Unit
 ) {
@@ -293,8 +284,8 @@ fun <T> DraggableInsertLazyGrid(
                 }, onDragEnd = {
                     offsetY.value = -1000f
                     moveItemVisible.value = false
-                    Log.e(
-                        "index", changeIndex.value.toString() + "," + moveIndex.value.toString()
+                    LogUtil.I(
+                        changeIndex.value.toString() + "," + moveIndex.value.toString()
                     )
                     val temp = data.get(moveIndex.value)
                     data.removeAt(moveIndex.value)
@@ -315,8 +306,7 @@ fun <T> DraggableInsertLazyGrid(
                         index = data.size - 1
                     }
                     changeIndex.value = index
-                    Log.e(
-                        "index",
+                    LogUtil.I(
                         changeIndex.value.toString() + "," + moveIndex.value.toString() + "," + itemHeight.value
                     )
 

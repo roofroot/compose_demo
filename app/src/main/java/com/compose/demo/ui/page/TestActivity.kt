@@ -34,20 +34,17 @@ import com.compose.demo.layout.PanelLayout
 import com.compose.demo.nav.MyNavigation
 import com.compose.demo.shape.WaveBorderShape
 import com.compose.demo.ui.theme.black
-import com.compose.demo.ui.theme.green
 import com.compose.demo.ui.theme.lavender
-import com.compose.demo.ui.theme.lightpink
 import com.compose.demo.ui.theme.mediumturquoise
 import com.compose.demo.ui.theme.pink
 import com.compose.demo.ui.theme.plum
-import com.compose.demo.ui.theme.white
-import com.compose.demo.widget.GradientOrientation
 import com.compose.demo.widget.GradientText
+import com.desaysv.hmicomponents.compose.SimpleDraggableInsertLazyList
 
 enum class NavTag {
     NavPage, SimpleScrollView, SimpleCirculatePager,
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
-    SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableListOffsetAnim
+    SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList
 }
 
 class TestActivity : ComponentActivity() {
@@ -96,9 +93,9 @@ class TestActivity : ComponentActivity() {
                         SimpleRefreshAndLoadList()
                     }
                 }
-                composable(NavTag.SimpleDraggableListOffsetAnim.name) {
+                composable(NavTag.SimpleDraggableInsertList.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleDraggableLazyListOffsetAnim()
+                        SimpleDraggableInsertLazyList()
                     }
                 }
             }
@@ -161,7 +158,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 8 -> {
                     Cards(
-                        navTag = NavTag.SimpleDraggableListOffsetAnim,
+                        navTag = NavTag.SimpleDraggableInsertList,
                         text = "DraggableListOffsetAnim",
                         navTo = navTo
                     )

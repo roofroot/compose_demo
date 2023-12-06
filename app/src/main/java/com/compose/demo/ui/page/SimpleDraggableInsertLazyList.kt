@@ -1,15 +1,17 @@
-package com.compose.demo.ui.page
+package com.desaysv.hmicomponents.compose
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -24,15 +26,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.compose.demo.R
-import com.compose.demo.layout.DraggableInsertLazyColumn
-import com.compose.demo.layout.DraggableInsertLazyGrid
+import com.compose.demo.ui.page.MyListData
+import com.compose.demo.ui.page.getRandomColor
+import com.desaysv.hmicomponents.compose_lib.layout.DraggableInsertLazyColumn
+import com.desaysv.hmicomponents.compose_lib.layout.DraggableInsertLazyGrid
 import com.google.accompanist.coil.rememberCoilPainter
 import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SimpleDraggableLazyListOffsetAnim() {
+fun SimpleDraggableInsertLazyList() {
 
 
     Column {
@@ -77,6 +81,11 @@ fun SimpleDraggableLazyListOffsetAnim() {
                 }
                 DraggableInsertLazyColumn(
                     data = data,
+                    onExchangeEnd = { sourceIndex, targetIndex ->
+                        val temp = data[sourceIndex]
+                        data.removeAt(sourceIndex)
+                        data.add(targetIndex, temp)
+                    },
                     hoverItemContent = { item, index ->
                         Row(
                             Modifier
@@ -140,48 +149,56 @@ fun SimpleDraggableLazyListOffsetAnim() {
                     data.add(MyListData(getRandomColor(), "000000" + i, resIcon))
                 }
                 DraggableInsertLazyGrid(
-                    columCount = 2,
+                    columCount = 6,
                     data = data,
+                    onExchangeEnd = { sourceIndex, targetIndex ->
+                        val temp = data[sourceIndex]
+                        data.removeAt(sourceIndex)
+                        data.add(targetIndex, temp)
+                    },
                     hoverItemContent = { item, index ->
-                        Row(
+                        Column(
                             Modifier
-                                .fillMaxWidth()
                                 .padding(10.dp)
                                 .height(100.dp)
+                                .width(100.dp)
                                 .background(color = item.color),
-                            horizontalArrangement = Arrangement.spacedBy(20.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalArrangement = Arrangement.spacedBy(5.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             val painter = rememberCoilPainter(request = item.iconRes)
+                            Box(Modifier.padding(top = 20.dp, bottom = 0.dp)) {
+                                Image(
+                                    modifier = Modifier
+                                        .size(50.dp),
+                                    painter = painter,
+                                    contentScale = ContentScale.FillBounds,
+                                    contentDescription = ""
+                                )
+                            }
+
+                            Text(text = item.number)
+                        }
+                    }) { item, index, modifier ->
+                    val painter = rememberCoilPainter(request = item.iconRes)
+                    Column(
+                        modifier
+                            .padding(10.dp)
+                            .height(100.dp)
+                            .width(100.dp)
+                            .background(color = item.color),
+                        verticalArrangement = Arrangement.spacedBy(5.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(Modifier.padding(top = 20.dp, bottom = 0.dp)) {
                             Image(
                                 modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(150.dp),
+                                    .size(50.dp),
                                 painter = painter,
                                 contentScale = ContentScale.FillBounds,
                                 contentDescription = ""
                             )
-                            Text(text = item.number)
                         }
-                    }) { item, index, modifier ->
-                    val painter = rememberCoilPainter(request = item.iconRes, fadeIn = true)
-                    Row(
-                        modifier
-                            .fillMaxWidth()
-                            .padding(10.dp)
-                            .height(100.dp)
-                            .background(color = item.color),
-                        horizontalArrangement = Arrangement.spacedBy(20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .width(150.dp),
-                            painter = painter,
-                            contentScale = ContentScale.FillBounds,
-                            contentDescription = ""
-                        )
 
                         Text(text = item.number)
                     }
