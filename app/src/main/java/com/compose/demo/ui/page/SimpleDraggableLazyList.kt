@@ -47,7 +47,6 @@ fun SimpleDraggableLazyList() {
 
 
     Column {
-
         val pageState = rememberPagerState()
         val scope = rememberCoroutineScope()
         TabRow(selectedTabIndex = pageState.currentPage) {

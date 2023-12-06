@@ -44,7 +44,7 @@ import com.desaysv.hmicomponents.compose.SimpleDraggableInsertLazyList
 enum class NavTag {
     NavPage, SimpleScrollView, SimpleCirculatePager,
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
-    SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList
+    SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList, SimpleCustomTabRow
 }
 
 class TestActivity : ComponentActivity() {
@@ -98,6 +98,16 @@ class TestActivity : ComponentActivity() {
                         SimpleDraggableInsertLazyList()
                     }
                 }
+                composable(NavTag.SimpleSelectableList.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleSelectableList()
+                    }
+                }
+                composable(NavTag.SimpleCustomTabRow.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleCustomTabRow()
+                    }
+                }
             }
         }
     }
@@ -106,7 +116,7 @@ class TestActivity : ComponentActivity() {
 @Composable
 fun NavPage(navTo: (tag: String) -> Unit) {
     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(5)) {
-        items(9) {
+        items(11) {
             when (it) {
                 0 -> {
                     Cards(
@@ -159,12 +169,27 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                 8 -> {
                     Cards(
                         navTag = NavTag.SimpleDraggableInsertList,
-                        text = "DraggableListOffsetAnim",
+                        text = "DraggableInsertOffset",
+                        navTo = navTo
+                    )
+                }
+
+                9 -> {
+                    Cards(
+                        navTag = NavTag.SimpleSelectableList,
+                        text = "SelectableList",
+                        navTo = navTo
+                    )
+                }
+
+                10 -> {
+                    Cards(
+                        navTag = NavTag.SimpleCustomTabRow,
+                        text = "CustomTabRow",
                         navTo = navTo
                     )
                 }
             }
-
 
         }
     }
