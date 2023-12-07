@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SimpleShape() {
-    val pageState = rememberPagerState()
+    val pageState = rememberPagerState{3}
     val scope = rememberCoroutineScope()
     Column {
         TabRow(selectedTabIndex = pageState.currentPage) {
@@ -54,7 +54,7 @@ fun SimpleShape() {
             }
 
         }
-        HorizontalPager(state = pageState, pageCount = 3) {
+        HorizontalPager(state = pageState) {
             when (it) {
                 0 -> {
                     SimpleWaveBoarderShape()

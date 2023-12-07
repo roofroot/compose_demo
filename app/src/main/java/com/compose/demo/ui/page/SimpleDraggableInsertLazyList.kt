@@ -41,7 +41,7 @@ fun SimpleDraggableInsertLazyList() {
 
     Column {
 
-        val pageState = rememberPagerState()
+        val pageState = rememberPagerState { 2 }
         val scope = rememberCoroutineScope()
         TabRow(selectedTabIndex = pageState.currentPage) {
             Tab(selected = pageState.currentPage == 0, onClick = {
@@ -60,7 +60,7 @@ fun SimpleDraggableInsertLazyList() {
             }
 
         }
-        HorizontalPager(state = pageState, pageCount = 3) {
+        HorizontalPager(state = pageState) {
             if (it == 0) {
                 val data = remember {
                     mutableListOf<MyListData>()

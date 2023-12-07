@@ -48,14 +48,14 @@ fun SimpleCirculatePager() {
     val autoScroll = remember {
         mutableStateOf(false)
     }
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { Int.MAX_VALUE }
     Box(modifier = Modifier.fillMaxSize()) {
         CirculatePager(
             data = list,
             autoScrollState = autoScroll,
             pagerState = pagerState
         ) { item, pos ->
-            val coilPainter= rememberCoilPainter(request = item)
+            val coilPainter = rememberCoilPainter(request = item)
             Image(
                 modifier = Modifier.fillMaxSize(),
                 painter = coilPainter,

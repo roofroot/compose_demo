@@ -44,7 +44,8 @@ import com.desaysv.hmicomponents.compose.SimpleDraggableInsertLazyList
 enum class NavTag {
     NavPage, SimpleScrollView, SimpleCirculatePager,
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
-    SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList, SimpleCustomTabRow
+    SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList,
+    SimpleCustomTabRow,SimpleDropDownList,
 }
 
 class TestActivity : ComponentActivity() {
@@ -108,6 +109,11 @@ class TestActivity : ComponentActivity() {
                         SimpleCustomTabRow()
                     }
                 }
+                composable(NavTag.SimpleDropDownList.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleDropDownList()
+                    }
+                }
             }
         }
     }
@@ -116,7 +122,7 @@ class TestActivity : ComponentActivity() {
 @Composable
 fun NavPage(navTo: (tag: String) -> Unit) {
     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(5)) {
-        items(11) {
+        items(12) {
             when (it) {
                 0 -> {
                     Cards(
@@ -186,6 +192,14 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                     Cards(
                         navTag = NavTag.SimpleCustomTabRow,
                         text = "CustomTabRow",
+                        navTo = navTo
+                    )
+                }
+
+                11 -> {
+                    Cards(
+                        navTag = NavTag.SimpleDropDownList,
+                        text = "DropDownList",
                         navTo = navTo
                     )
                 }

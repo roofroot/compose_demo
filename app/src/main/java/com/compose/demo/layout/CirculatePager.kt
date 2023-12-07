@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 fun <T> CirculatePager(
     data: List<T>,
     autoScrollState: MutableState<Boolean>,
-    pagerState:PagerState = rememberPagerState(),
+    pagerState: PagerState = rememberPagerState { Int.MAX_VALUE },
     item: @Composable (t: T, pos: Int) -> Unit,
 ) {
 
@@ -30,11 +30,11 @@ fun <T> CirculatePager(
     val isOnAnim = remember {
         mutableStateOf(false)
     }
-    HorizontalPager(pageCount = Int.MAX_VALUE, state = pagerState) {
+    HorizontalPager(state = pagerState) {
         val pos = it % data.size
         item(data.get(pos), pos)
     }
-    if(autoScrollState.value) {
+    if (autoScrollState.value) {
         if (!isOnAnim.value) {
             isOnAnim.value = true
             //避免重复启动

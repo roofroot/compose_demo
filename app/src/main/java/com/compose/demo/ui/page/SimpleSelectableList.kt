@@ -45,7 +45,7 @@ fun SimpleSelectableList() {
     }
     val scope = rememberCoroutineScope()
     Column {
-        val pageState = rememberPagerState()
+        val pageState = rememberPagerState{2}
         val scope = rememberCoroutineScope()
         TabRow(selectedTabIndex = pageState.currentPage) {
             Tab(selected = pageState.currentPage == 0, onClick = {
@@ -63,7 +63,7 @@ fun SimpleSelectableList() {
                 Text(text = "多选")
             }
         }
-        HorizontalPager(state = pageState, pageCount = 2) {
+        HorizontalPager(state = pageState) {
             if (it == 0) {
                 val selectedItemIndex = remember {
                     mutableStateOf(-1)

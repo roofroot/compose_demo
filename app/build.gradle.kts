@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.compose.demo"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.compose.demo"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -71,4 +71,5 @@ dependencies {
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.0-rc02")
     implementation ("com.google.accompanist:accompanist-coil:0.13.0")
     implementation ("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.compose.animation:animation-graphics-android:1.5.4")
 }

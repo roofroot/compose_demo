@@ -47,7 +47,7 @@ fun SimpleDraggableLazyList() {
 
 
     Column {
-        val pageState = rememberPagerState()
+        val pageState = rememberPagerState{3}
         val scope = rememberCoroutineScope()
         TabRow(selectedTabIndex = pageState.currentPage) {
             Tab(selected = pageState.currentPage == 0, onClick = {
@@ -72,7 +72,7 @@ fun SimpleDraggableLazyList() {
                 Text(text = "错位网格")
             }
         }
-        HorizontalPager(state = pageState, pageCount = 3) {
+        HorizontalPager(state = pageState) {
             if (it == 0) {
                 val data = remember {
                     mutableListOf<MyListData>()
