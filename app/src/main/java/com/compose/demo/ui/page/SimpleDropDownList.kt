@@ -56,34 +56,35 @@ fun SimpleDropDownList() {
         list.add(Pair("header${i}", sublist))
     }
 
-    DropDownList(list = list, headerContent = { item: String, i: Int, b: MutableState<Boolean> ->
-
-        Row(modifier = Modifier
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    b.value = !b.value
-                }, onLongPress = {
-                    list.removeAt(i)
-                })
+    DropDownList(
+        list = list,
+        singleExpended = true,
+        headerContent = { item, index, expended, expendIndex ->
+            Row(modifier = Modifier
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        expendIndex?.value = index
+                        expended.value = !expended.value
+                    }, onLongPress = {
+                        list.removeAt(index)
+                    })
+                }
+                .height(50.dp)
+                .fillMaxWidth()
+                .background(Color.LightGray)
+                .padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = item
+                )
+                val image =
+                    AnimatedImageVector.animatedVectorResource(R.drawable.arrow_up_down)
+                Image(
+                    painter = rememberAnimatedVectorPainter(image, expended.value),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
+                )
             }
-            .height(50.dp)
-            .fillMaxWidth()
-            .background(Color.LightGray)
-            .padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = item
-            )
-
-            val image =
-                AnimatedImageVector.animatedVectorResource(R.drawable.arrow_up_down)
-            Image(
-                painter = rememberAnimatedVectorPainter(image, b.value),
-                contentDescription = "",
-                contentScale = ContentScale.Crop
-            )
-
-        }
-    }) { item: String, index: Int, headerIndex: Int ->
+        }) { item: String, index: Int, headerIndex: Int ->
         Text(modifier = Modifier
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {

@@ -16,15 +16,10 @@ fun GridLayout(
     columns: Int,
     spaceV: Dp = 0.dp,
     spaceH: Dp = 0.dp,
-    paddingTop: Dp = 0.dp,
-    paddingLeft: Dp = 0.dp,
-    paddingRight: Dp = 0.dp,
-    paddingBottom: Dp = 0.dp,
     content: @Composable () -> Unit
 ) {
-
     Layout(
-        modifier = modifier.padding(paddingLeft, paddingTop, paddingRight, paddingBottom),
+        modifier = modifier,
         content = content
     ) { measurables, constraints ->
         //每个元素的x轴位置
