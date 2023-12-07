@@ -100,6 +100,7 @@ fun <T> DraggableInsertLazyColumn(
                     moveItemVisible.value = false
                 }, onDragEnd = {
                     moveItemVisible.value = false
+                    onExchangeEnd.invoke(moveIndex.value,changeIndex.value)
                     LogUtil.I(
                         changeIndex.value.toString() + "," + moveIndex.value.toString()
                     )
