@@ -31,6 +31,7 @@ import com.compose.demo.layout.AnimPageIndicator
 import com.compose.demo.layout.CirculatePager
 import com.compose.demo.layout.OffsetPagerIndicator
 import com.compose.demo.layout.SelectPagerIndicator
+import com.compose.demo.layout.getCirclePagerState
 
 import com.google.accompanist.coil.rememberCoilPainter
 
@@ -48,7 +49,7 @@ fun SimpleCirculatePager() {
     val autoScroll = remember {
         mutableStateOf(false)
     }
-    val pagerState = rememberPagerState { Int.MAX_VALUE }
+    val pagerState = getCirclePagerState()
     Box(modifier = Modifier.fillMaxSize()) {
         CirculatePager(
             data = list,

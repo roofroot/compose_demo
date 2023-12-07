@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 fun <T> CirculatePager(
     data: List<T>,
     autoScrollState: MutableState<Boolean>,
-    pagerState: PagerState = rememberPagerState { Int.MAX_VALUE },
+    pagerState: PagerState = getCirclePagerState(),
     item: @Composable (t: T, pos: Int) -> Unit,
 ) {
 
@@ -93,5 +93,13 @@ fun <T> CirculatePager(
         scope.launch {
             pagerState.scrollToPage(1000 * data.size)
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun getCirclePagerState(): PagerState {
+    return rememberPagerState {
+        Int.MAX_VALUE
     }
 }
