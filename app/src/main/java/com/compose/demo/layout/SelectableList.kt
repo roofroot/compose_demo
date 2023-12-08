@@ -1,6 +1,5 @@
 package com.compose.demo.layout
 
-import android.sax.Element
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -18,9 +17,6 @@ fun <T> MultipleSelectableList(
     selectableListState: SelectableListState<T>,
     content: @Composable (selectModifier: Modifier, selected: Boolean, item: T, index: Int) -> Unit
 ) {
-    selectableListState.selectedMap = remember {
-        mutableStateMapOf()
-    }
     LazyColumn(modifier = modifier) {
         itemsIndexed(data) { index, item ->
             val modifier = Modifier.clickable {
@@ -51,10 +47,12 @@ fun <T> SingleSelectableList(
 }
 
 @Composable
-fun <T> rememberSelectableListState(): MutableState<SelectableListState<T>> {
-    return remember {
-        mutableStateOf(SelectableListState())
+fun <T> rememberSelectableListState(): SelectableListState<T>{
+    val selectableListState = SelectableListState<T>()
+    selectableListState.selectedMap=remember {
+        mutableStateMapOf()
     }
+    return selectableListState
 }
 
 class SelectableListState<T> {

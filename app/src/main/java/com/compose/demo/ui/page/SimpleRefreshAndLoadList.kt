@@ -34,12 +34,12 @@ fun SimpleRefreshAndLoadList() {
         onLoading = {
             delay(3000)
             loadMore(data)
-            state.value.completeLoading()
+            state.completeLoading()
         },
         onRefresh = {
             delay(3000)
             splash(data)
-            state.value.completeRefresh()
+            state.completeRefresh()
         },
         listData = data,
         state = state

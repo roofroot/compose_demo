@@ -34,6 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.compose.demo.R
 import com.compose.demo.layout.DropDownList
+import com.compose.demo.layout.rememberDropDownListState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationGraphicsApi::class)
@@ -55,18 +56,15 @@ fun SimpleDropDownList() {
         }
         list.add(Pair("header${i}", sublist))
     }
-
+    val dropDownListState = rememberDropDownListState(defaultExpendIndex = 0)
     DropDownList(
         list = list,
-        singleExpended = true,
-        headerContent = { item, index, expended, expendIndex ->
+        dropDownListState = dropDownListState,
+        headerContent = { item, index, expended ->
             Row(modifier = Modifier
                 .pointerInput(Unit) {
                     detectTapGestures(onTap = {
-                        expendIndex?.value = index
-                        expended.value = !expended.value
-                    }, onLongPress = {
-                        list.removeAt(index)
+                        dropDownListState.toggle(index)
                     })
                 }
                 .height(50.dp)
@@ -79,7 +77,7 @@ fun SimpleDropDownList() {
                 val image =
                     AnimatedImageVector.animatedVectorResource(R.drawable.arrow_up_down)
                 Image(
-                    painter = rememberAnimatedVectorPainter(image, expended.value),
+                    painter = rememberAnimatedVectorPainter(image, expended),
                     contentDescription = "",
                     contentScale = ContentScale.Crop
                 )

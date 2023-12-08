@@ -40,7 +40,7 @@ fun <T> RefreshAndLoadMoreList(
     onLoading: suspend () -> Unit,
     onRefresh: suspend () -> Unit,
     listData: MutableList<T>,
-    state: MutableState<LoadMoreAndRefreshListState>,
+    state:LoadMoreAndRefreshListState,
     footerContent: (@Composable () -> Unit) = {
         val angle = remember {
             mutableStateOf(0f)
@@ -123,19 +123,13 @@ fun <T> RefreshAndLoadMoreList(
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    state.value.onLoading = remember {
-        mutableStateOf(false)
-    }
-    state.value.onRefresh = remember {
-        mutableStateOf(false)
-    }
 
     var maxItem = remember {
         mutableStateOf(0)
     }
 
     Column(Modifier.fillMaxSize()) {
-        AnimatedVisibility(visible = state.value.onRefresh!!.value) {
+        AnimatedVisibility(visible = state.onRefresh.value) {
             headerContent()
         }
         LazyColumn(
@@ -143,13 +137,13 @@ fun <T> RefreshAndLoadMoreList(
                 .weight(1f),
             state = listState,
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            userScrollEnabled = !state.value.onLoading!!.value && !state.value.onRefresh!!.value,
+            userScrollEnabled = !state.onLoading.value && !state.onRefresh.value,
             content = {
                 itemsIndexed(listData) { index: Int, item: T ->
                     content(index, item)
                 }
             })
-        AnimatedVisibility(visible = state.value.onLoading!!.value) {
+        AnimatedVisibility(visible = state.onLoading.value) {
             scope.launch {
                 listState.scrollToItem(maxItem.value)
             }
@@ -158,8 +152,8 @@ fun <T> RefreshAndLoadMoreList(
     }
     if (listState.isScrollInProgress) {
         if (canLoadMore && !listState.canScrollForward) {
-            if (!state.value.onLoading!!.value) {
-                state.value.onLoading!!.value = true
+            if (!state.onLoading.value) {
+                state.onLoading.value = true
                 scope.launch {
                     maxItem.value = listData.size - 1
                     onLoading()
@@ -167,8 +161,8 @@ fun <T> RefreshAndLoadMoreList(
             }
         }
         if (canRefresh && !listState.canScrollBackward) {
-            if (!state.value.onRefresh!!.value) {
-                state.value.onRefresh!!.value = true
+            if (!state.onRefresh!!.value) {
+                state.onRefresh.value = true
                 scope.launch {
                     onRefresh()
                 }
@@ -178,21 +172,26 @@ fun <T> RefreshAndLoadMoreList(
 }
 
 @Composable
-fun rememberLoadMoreAndRefreshListState(): MutableState<LoadMoreAndRefreshListState> {
-    return remember {
-        mutableStateOf(LoadMoreAndRefreshListState())
+fun rememberLoadMoreAndRefreshListState(): LoadMoreAndRefreshListState {
+    val loadMoreAndRefreshListState = LoadMoreAndRefreshListState()
+    loadMoreAndRefreshListState.onRefresh = remember {
+        mutableStateOf(false)
     }
+    loadMoreAndRefreshListState.onLoading = remember {
+        mutableStateOf(false)
+    }
+    return loadMoreAndRefreshListState
 }
 
 class LoadMoreAndRefreshListState {
-    var onLoading: MutableState<Boolean>? = null
-    var onRefresh: MutableState<Boolean>? = null
+    lateinit var onLoading: MutableState<Boolean>
+    lateinit var onRefresh: MutableState<Boolean>
     fun completeLoading() {
-        onLoading?.value = false
+        onLoading.value = false
     }
 
     fun completeRefresh() {
-        onRefresh?.value = false
+        onRefresh.value = false
     }
 }
 

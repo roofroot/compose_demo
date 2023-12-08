@@ -1,7 +1,10 @@
 package com.compose.demo.layout
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
@@ -10,14 +13,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun <H, T> DropDownList(
     list: List<Pair<H, List<T>>>,
@@ -25,27 +33,44 @@ fun <H, T> DropDownList(
     contentSpaceH: Dp = 0.dp,
     contentSpaceV: Dp = 10.dp,
     headerSpace: Dp = 10.dp,
-    singleExpended: Boolean = false,
-    expendedIndex: Int = 0,
+    singleExpended: Boolean = true,
+    autoScroll: Boolean = true,
+    dropDownListState: DropDownListState,
     itemContentModifier: Modifier = Modifier.padding(10.dp),
-    headerContent: @Composable (item: H, index: Int, expended: MutableState<Boolean>, expendedIndex: MutableState<Int>) -> Unit,
+    headerContent: @Composable (item: H, index: Int, expended: Boolean) -> Unit,
     itemContent: @Composable (item: T, index: Int, headerIndex: Int) -> Unit,
 ) {
-    val expendedIndex = remember {
-        mutableStateOf(expendedIndex)
-    }
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(headerSpace)) {
+
+    val scope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(headerSpace), state = listState) {
         itemsIndexed(list) { headerIndex: Int, item: Pair<H, List<T>> ->
-            val expended = remember {
-                mutableStateOf(false)
+            if (!dropDownListState.stateMap.containsKey(headerIndex)) {
+                val expended = remember {
+                    mutableStateOf(false)
+                }
+                dropDownListState.stateMap.put(headerIndex, expended)
+            }
+
+            if (dropDownListState.expendedIndex.value == headerIndex && autoScroll && dropDownListState.stateMap[headerIndex]!!.value) {
+                scope.launch {
+                    delay(600)
+                    listState.animateScrollToItem(
+                        headerIndex
+                    )
+                }
             }
             if (singleExpended) {
-                headerContent.invoke(item.first, headerIndex, expended, expendedIndex)
-                if (headerIndex != expendedIndex.value) {
-                    expended.value = false
+                if (headerIndex != dropDownListState.expendedIndex.value) {
+                    dropDownListState.stateMap[headerIndex]?.value = false
                 }
+                headerContent.invoke(
+                    item.first,
+                    headerIndex,
+                    (dropDownListState.stateMap[headerIndex]?.value) ?: false
+                )
                 AnimatedVisibility(
-                    visible = (headerIndex == expendedIndex.value && expended.value) && expended.value,
+                    visible = (headerIndex == dropDownListState.expendedIndex.value) && (dropDownListState.stateMap[headerIndex]!!.value),
                     enter = expandVertically(),
                     exit = shrinkVertically()
                 ) {
@@ -61,9 +86,15 @@ fun <H, T> DropDownList(
                     }
                 }
             } else {
-                headerContent.invoke(item.first, headerIndex, expended, expendedIndex)
+                headerContent.invoke(
+                    item.first,
+                    headerIndex,
+                    dropDownListState.stateMap[headerIndex]!!.value
+                )
                 AnimatedVisibility(
-                    visible = expended.value, enter = expandVertically(), exit = shrinkVertically()
+                    visible = (dropDownListState.stateMap[headerIndex]!!.value),
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
                 ) {
                     GridLayout(
                         modifier = itemContentModifier,
@@ -78,5 +109,23 @@ fun <H, T> DropDownList(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun rememberDropDownListState(defaultExpendIndex: Int): DropDownListState {
+    val dropDownListState = DropDownListState()
+    dropDownListState.expendedIndex = remember {
+        mutableStateOf(defaultExpendIndex)
+    }
+    return dropDownListState
+}
+
+class DropDownListState {
+    lateinit var expendedIndex: MutableState<Int>
+    val stateMap = HashMap<Int, MutableState<Boolean>>()
+    fun toggle(index: Int) {
+        expendedIndex.value = index
+        stateMap[index]!!.value = !stateMap[index]!!.value
     }
 }

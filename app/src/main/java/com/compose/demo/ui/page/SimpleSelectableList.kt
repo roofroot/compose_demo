@@ -98,7 +98,7 @@ fun SimpleSelectableList() {
                 val selectableListState = rememberSelectableListState<String>()
                 MultipleSelectableList(
                     data = list,
-                    selectableListState = selectableListState.value,
+                    selectableListState = selectableListState,
                 ) { modifier: Modifier, selected: Boolean, item: String, index: Int ->
                     Row(
                         modifier = modifier.fillMaxWidth(),
