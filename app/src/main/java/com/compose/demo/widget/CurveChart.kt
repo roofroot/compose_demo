@@ -102,7 +102,7 @@ fun CurveChart(
                     val xUnit = size.width.toFloat() / totalXUnit
                     val yUnit = size.height.toFloat() / totalYUnit
                     pointList.forEach {
-                        if (abs((offset.x / xUnit).roundToInt() - it.x) < 3 && abs((totalYUnit - offset.y / yUnit).roundToInt() - it.y) < 3) {
+                        if (abs((offset.x / xUnit).roundToInt() - it.x) < 2 && abs((totalYUnit - offset.y / yUnit).roundToInt() - it.y) < 2) {
                             lineX.value = (it.x * xUnit)
                             lineY.value = (((totalYUnit - it.y)) * yUnit)
                             Log.e("aaaaaaaaaaaaaa", "(${it.x},${it.y})")
