@@ -34,6 +34,17 @@ import java.text.DecimalFormat
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
+/**
+ * @property color Color 刻度线的颜色
+ * @property unit Int 刻度线最小间隔是多少个单位
+ * @property height Dp 刻度线高度
+ * @property width Dp 刻度线的宽度
+ * @property showUnit Boolean 是否在刻度线位置显示刻度线指定的单位
+ * @property textColor Color 如果显示刻度单位，文字可以指定颜色
+ * @property textFormat String 可以指定显示的刻度单位的格式化，默认只显示单位的数值，可以指定“%scm”等等
+ * @property textSize TextUnit 可以指定显示的刻度单位的文字大小
+ * @constructor
+ */
 data class MarkLine(
     val color: Color,
     val unit: Int,
@@ -45,8 +56,45 @@ data class MarkLine(
     val textSize: TextUnit = 8.sp
 )
 
+/**
+ *
+ * @property color Color 指定范围曲线的颜色
+ * @property bgColor Color 指定范围的背景色
+ * @property startUnit Int 指定范围的开始刻度
+ * @property endUnit Int 指定范围的结束刻度
+ * @constructor
+ */
 data class StepColor(val color: Color, val bgColor: Color, val startUnit: Int, val endUnit: Int)
 
+/**
+ * @param modifier Modifier 图表的modifier，可以通过这个modifier调整整个图表的大小等
+ * @param pointList ArrayList<Point> 图表的数据
+ * @param totalXUnit Int X轴的总单位数量
+ * @param totalYUnit Int Y轴的总单位数量
+ * @param minUnit Float 最小单位，例如0.1，totalUnit是1000，则代表整个轴被等分为1000个单位，每个单位代表0.1
+ * @param decimalFormat DecimalFormat 当最小单位是小数时，可以通过这个参数指定小数显示的格式化，默认保留两位
+ * @param xMarkLine List<MarkLine>?  x轴上的刻度，具体参数查看MarkLine
+ *
+ * @param yMarkLine List<MarkLine>? y轴上的刻度
+ * @param stepColorList List<StepColor>? 可以分段显示纵轴的刻度线。具体参数查看StepColor
+ * @param showMoveMarkLine Boolean 是否显示可移动的标记线
+ * @param showBaseLine Boolean 是否显示X轴，Y轴基准线
+ * @param showStepSegmentLine Boolean 如果指定了stepColorList的情况，是否显示分段的间隔线、
+ * @param stepSegmentLineColor Color 如果指定了stepColorList的情况，设置了显示分段的分割线，可以指定分割线颜色
+ * @param stepSegmentLineWidth Dp 如果指定了stepColorList的情况，设置了显示分段的分割线，可以指定分割线宽度
+ * @param showStepBg Boolean 如果指定了stepColorList的情况，是否展示背景色
+ * @param dotColor Color 数据点的颜色
+ * @param curveLineColor Color 曲线的颜色
+ * @param baselineColor Color 基准线的颜色
+ * @param moveXLineColor Color 可移动标记线X轴颜色
+ * @param moveYLineColor Color 可移动标记下Y轴颜色
+ * @param textColor Color 指可移动标记线附件显示的标记线当前所在位置的刻度的文字的颜色
+ * @param moveLineTextSize TextUnit 指可移动标记线附件显示的标记线当前所在位置的刻度的文字大小
+ * @param dotSize Dp 数据点的大小
+ * @param curveLineWidth Dp 曲线的宽度
+ * @param baseLineWidth Dp 基准线的宽度
+ * @param moveLineWidth Dp 可移动标记线的宽度
+ */
 @Composable
 fun CurveChart(
     modifier: Modifier = Modifier.fillMaxSize(),
