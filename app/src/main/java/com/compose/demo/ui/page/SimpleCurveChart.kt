@@ -16,27 +16,27 @@ import kotlin.random.Random
 fun SimpleCurveChart() {
     val list = ArrayList<Point>()
     var a = 0
-    while (a < 100) {
-        list.add(Point(a, Random.nextInt(0, 100)))
-        a += Random.nextInt(1, 10)
+    while (a < 1500) {
+        list.add(Point(a, Random.nextInt(0, 1000)))
+        a += Random.nextInt(1, 100)
     }
 
     val xMarkLine = listOf<MarkLine>(
-        MarkLine(Color.LightGray, 1, 5.dp, 0.5.dp, false),
-        MarkLine(Color.Gray, 5, 10.dp, 0.8.dp, false),
-        MarkLine(Color.Black, 10, 15.dp, 1.dp, true)
+        MarkLine(Color.LightGray, 10, 5.dp, 0.5.dp, false),
+        MarkLine(Color.Gray, 50, 10.dp, 0.8.dp, false),
+        MarkLine(Color.Black, 100, 15.dp, 1.dp, true)
 
     )
     val yMarkLine = listOf<MarkLine>(
-        MarkLine(Color.LightGray, 1, 5.dp, 0.5.dp, false),
-        MarkLine(Color.Gray, 5, 10.dp, 0.8.dp, false),
-        MarkLine(Color.Black, 10, 15.dp, 1.dp, true)
+        MarkLine(Color.LightGray, 10, 5.dp, 0.5.dp, false),
+        MarkLine(Color.Gray, 50, 10.dp, 0.8.dp, false),
+        MarkLine(Color.Black, 100, 15.dp, 1.dp, true)
     )
     val stepColorList = listOf(
-        StepColor(getRandomColor(), lightcyan, 0, 30),
-        StepColor(getRandomColor(), ghostwhite, 30, 60), StepColor(
+        StepColor(getRandomColor(), lightcyan, 0, 300),
+        StepColor(getRandomColor(), ghostwhite, 300, 600), StepColor(
             getRandomColor(), mintcream,
-            60, 100
+            600, 1000
         )
     )
 
@@ -48,8 +48,8 @@ fun SimpleCurveChart() {
     val curveColor = getRandomColor()
     CurveChart(
         pointList = list,
-        totalXUnit = 100,
-        totalYUnit = 100,
+        totalXUnit = 1500,
+        totalYUnit = 1000,
         xMarkLine = xMarkLine,
         yMarkLine = yMarkLine,
         stepColorList = stepColorList,
@@ -59,6 +59,7 @@ fun SimpleCurveChart() {
         moveXLineColor = xLineColor,
         moveYLineColor = yLineColor,
         textColor = textColor,
-        curveLineColor = curveColor
+        curveLineColor = curveColor,
+        minUnit = 0.1f
     )
 }

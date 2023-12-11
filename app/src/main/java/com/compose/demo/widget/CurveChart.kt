@@ -30,8 +30,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.text.DecimalFormat
 import kotlin.math.abs
 import kotlin.math.roundToInt
+
 data class MarkLine(
     val color: Color,
     val unit: Int,
@@ -51,6 +53,8 @@ fun CurveChart(
     pointList: ArrayList<Point>,
     totalXUnit: Int,
     totalYUnit: Int,
+    minUnit: Float = 1f,
+    decimalFormat: DecimalFormat = DecimalFormat("0.##"),
     xMarkLine: List<MarkLine>? = null,
     yMarkLine: List<MarkLine>? = null,
     stepColorList: List<StepColor>? = null,
@@ -101,12 +105,31 @@ fun CurveChart(
                 detectTapGestures(onTap = { offset ->
                     val xUnit = size.width.toFloat() / totalXUnit
                     val yUnit = size.height.toFloat() / totalYUnit
+                    val list = ArrayList<Point>()
                     pointList.forEach {
-                        if (abs((offset.x / xUnit).roundToInt() - it.x) < 2 && abs((totalYUnit - offset.y / yUnit).roundToInt() - it.y) < 2) {
-                            lineX.value = (it.x * xUnit)
-                            lineY.value = (((totalYUnit - it.y)) * yUnit)
+                        if (abs((offset.x / xUnit).roundToInt() - it.x) < (totalXUnit / 100) * 2 && abs(
+                                (totalYUnit - offset.y / yUnit).roundToInt() - it.y
+                            ) < (totalYUnit / 100) * 2
+                        ) {
+                            list.add(it)
                             Log.e("aaaaaaaaaaaaaa", "(${it.x},${it.y})")
-                            return@forEach
+                        }
+                    }
+                    if (list.size > 0) {
+                        if (list.size == 1) {
+                            lineX.value = (list[0].x * xUnit)
+                            lineY.value = (((totalYUnit - list[0].y)) * yUnit)
+                        } else {
+                            var tempIndex = 0
+                            var temp = abs((offset.x / xUnit).roundToInt() - list[0].x)
+                            list.forEachIndexed { index, point ->
+                                if (abs((offset.x / xUnit).roundToInt() - point.x) < temp) {
+                                    temp = abs((offset.x / xUnit).roundToInt() - point.x)
+                                    tempIndex = index
+                                }
+                            }
+                            lineX.value = (list[tempIndex].x * xUnit)
+                            lineY.value = (((totalYUnit - list[tempIndex].y)) * yUnit)
                         }
                     }
                 })
@@ -134,15 +157,13 @@ fun CurveChart(
                 }
                 it.saveLayer(
                     Rect(
-                        Offset.Zero,
-                        size
+                        Offset.Zero, size
                     ), paint = Paint()
                 )
                 val path = Path()
                 path.moveTo(pointList.get(0).x * xUnit, (totalYUnit - pointList.get(0).y) * yUnit)
                 for (index in 0 until pointList.size - 1) {
-                    val x1 =
-                        ((pointList[index + 1].x + pointList[index].x) / 2) * xUnit
+                    val x1 = ((pointList[index + 1].x + pointList[index].x) / 2) * xUnit
                     val y1 = (totalYUnit - pointList[index].y) * yUnit
                     val y2 = (totalYUnit - pointList[index + 1].y) * yUnit
                     val x3 = pointList[index + 1].x * xUnit
@@ -163,17 +184,23 @@ fun CurveChart(
                     drawLine(
                         moveXLineColor,
                         Offset(lineX.value, 0f),
-                        Offset(lineX.value, size.height), strokeWidth = moveLineWidth.toPx()
+                        Offset(lineX.value, size.height),
+                        strokeWidth = moveLineWidth.toPx()
                     )
 
                     drawLine(
                         moveYLineColor,
                         Offset(0f, lineY.value),
-                        Offset(size.width, lineY.value), strokeWidth = moveLineWidth.toPx()
+                        Offset(size.width, lineY.value),
+                        strokeWidth = moveLineWidth.toPx()
                     )
 
                     val textStr =
-                        "(x:${(lineX.value / xUnit).roundToInt()},y:${(totalYUnit - (lineY.value / yUnit)).roundToInt()})"
+                        "(x:${decimalFormat.format((lineX.value / xUnit).roundToInt() * minUnit)},y:${
+                            decimalFormat.format(
+                                (totalYUnit - (lineY.value / yUnit)).roundToInt() * minUnit
+                            )
+                        })"
                     val layout = mTextMeasurer.measure(
                         text = textStr,
                         style = TextStyle(fontSize = 20.sp),
@@ -203,7 +230,8 @@ fun CurveChart(
                             strokeWidth = it.width.toPx()
                         )
                         if (it.showUnit) {
-                            val unitFormat = String.format(it.textFormat, i)
+                            val unitFormat =
+                                String.format(it.textFormat, decimalFormat.format(i * minUnit))
                             val layout = mTextMeasurer.measure(
                                 text = unitFormat,
                                 style = TextStyle(fontSize = it.textSize),
@@ -218,8 +246,7 @@ fun CurveChart(
                                         size.height - it.height.toPx() - layout.size.height
                                     ),
                                     style = TextStyle(
-                                        fontSize = it.textSize,
-                                        color = it.textColor
+                                        fontSize = it.textSize, color = it.textColor
                                     )
                                 )
                             }
@@ -233,10 +260,14 @@ fun CurveChart(
                         drawLine(
                             it.color,
                             Offset(0f, i * yUnit),
-                            Offset(it.height.toPx(), i * yUnit), strokeWidth = it.width.toPx()
+                            Offset(it.height.toPx(), i * yUnit),
+                            strokeWidth = it.width.toPx()
                         )
                         if (it.showUnit) {
-                            val unitFormat = String.format(it.textFormat, totalYUnit - i)
+                            val unitFormat = String.format(
+                                it.textFormat,
+                                decimalFormat.format((totalYUnit - i) * minUnit)
+                            )
                             val layout = mTextMeasurer.measure(
                                 text = unitFormat,
                                 style = TextStyle(fontSize = it.textSize),
@@ -247,12 +278,10 @@ fun CurveChart(
                                     textMeasurer = mTextMeasurer,
                                     text = unitFormat,
                                     topLeft = Offset(
-                                        it.height.toPx(),
-                                        i * yUnit - layout.size.height / 2
+                                        it.height.toPx(), i * yUnit - layout.size.height / 2
                                     ),
                                     style = TextStyle(
-                                        fontSize = it.textSize,
-                                        color = it.textColor
+                                        fontSize = it.textSize, color = it.textColor
                                     )
                                 )
                             }
@@ -264,12 +293,14 @@ fun CurveChart(
                     drawLine(
                         baselineColor,
                         Offset(0f, 0f),
-                        Offset(0f, size.height), strokeWidth = baseLineWidth.toPx()
+                        Offset(0f, size.height),
+                        strokeWidth = baseLineWidth.toPx()
                     )
                     drawLine(
                         baselineColor,
                         Offset(0f, size.height),
-                        Offset(size.width, size.height), strokeWidth = baseLineWidth.toPx()
+                        Offset(size.width, size.height),
+                        strokeWidth = baseLineWidth.toPx()
                     )
                 }
 
