@@ -250,8 +250,7 @@ fun CurveChart(
                         })"
                     val layout = mTextMeasurer.measure(
                         text = textStr,
-                        style = TextStyle(fontSize = 20.sp),
-                        constraints = Constraints(maxWidth = size.width.toInt())
+                        style = TextStyle(fontSize = moveLineTextSize),
                     )
                     var offsetX = 0
                     var offsetY = 0
