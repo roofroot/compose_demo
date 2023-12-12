@@ -60,6 +60,6 @@ fun SimpleCurveChart() {
         moveYLineColor = yLineColor,
         textColor = textColor,
         curveLineColor = curveColor,
-        minUnit = 0.1f
+        minUnit = 0.1f,
     )
 }

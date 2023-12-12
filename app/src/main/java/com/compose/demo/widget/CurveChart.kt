@@ -191,7 +191,6 @@ fun CurveChart(
                             color = it.bgColor,
                             Offset(0f, (totalYUnit - it.endUnit) * yUnit),
                             Size(size.width, (it.endUnit - it.startUnit) * yUnit),
-                            blendMode = BlendMode.SrcIn
                         )
                     }
                     if (it.startUnit > 0 && showStepSegmentLine) {
@@ -224,7 +223,7 @@ fun CurveChart(
                         color = it.color,
                         Offset(0f, (totalYUnit - it.endUnit) * yUnit),
                         Size(size.width, (it.endUnit - it.startUnit) * yUnit),
-                        blendMode = BlendMode.SrcIn
+                        blendMode = BlendMode.SrcAtop
                     )
                 }
                 it.restore()
