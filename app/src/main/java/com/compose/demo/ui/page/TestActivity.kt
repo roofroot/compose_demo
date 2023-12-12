@@ -45,7 +45,7 @@ enum class NavTag {
     NavPage, SimpleScrollView, SimpleCirculatePager,
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
     SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList,
-    SimpleCustomTabRow,SimpleDropDownList,SimpleCurveChart
+    SimpleCustomTabRow,SimpleDropDownList,SimpleCurveChart,SimpleCircleProgress
 }
 
 class TestActivity : ComponentActivity() {
@@ -119,6 +119,11 @@ class TestActivity : ComponentActivity() {
                         SimpleCurveChart()
                     }
                 }
+                composable(NavTag.SimpleCircleProgress.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleCircleProgress()
+                    }
+                }
             }
         }
     }
@@ -127,7 +132,7 @@ class TestActivity : ComponentActivity() {
 @Composable
 fun NavPage(navTo: (tag: String) -> Unit) {
     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(5)) {
-        items(13) {
+        items(14) {
             when (it) {
                 0 -> {
                     Cards(
@@ -212,6 +217,13 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                     Cards(
                         navTag = NavTag.SimpleCurveChart,
                         text = "CurveChart",
+                        navTo = navTo
+                    )
+                }
+                13 -> {
+                    Cards(
+                        navTag = NavTag.SimpleCircleProgress,
+                        text = "CircleProgress",
                         navTo = navTo
                     )
                 }
