@@ -63,6 +63,7 @@ fun CustomSeekBar(
     barHeight: Dp = 10.dp,
     barBgColor: Color = Color.LightGray,
     barFgColor: Color = Color.Blue,
+    onStop: (progress: Int) -> Unit = {},
     barBgContent: @Composable () -> Unit = {
         Box(
             Modifier
@@ -131,7 +132,10 @@ fun CustomSeekBar(
         .offset {
             IntOffset(animOffset.value, 0)
         }
-        .draggable(state = state, orientation = Orientation.Horizontal)
+        .draggable(
+            state = state,
+            orientation = Orientation.Horizontal,
+            onDragStopped = { onStop.invoke(currentProgress.value) })
     Box(
         modifier
             .onPlaced {

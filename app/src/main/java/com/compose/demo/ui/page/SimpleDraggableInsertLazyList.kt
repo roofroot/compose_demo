@@ -151,38 +151,10 @@ fun SimpleDraggableInsertLazyList() {
                 DraggableInsertLazyGrid(
                     columCount = 6,
                     data = data,
-                    onExchangeEnd = { sourceIndex, targetIndex ->
-                        val temp = data[sourceIndex]
-                        data.removeAt(sourceIndex)
-                        data.add(targetIndex, temp)
-                    },
-                    hoverItemContent = { item, index ->
-                        Column(
-                            Modifier
-                                .padding(10.dp)
-                                .height(100.dp)
-                                .width(100.dp)
-                                .background(color = item.color),
-                            verticalArrangement = Arrangement.spacedBy(5.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            val painter = rememberCoilPainter(request = item.iconRes)
-                            Box(Modifier.padding(top = 20.dp, bottom = 0.dp)) {
-                                Image(
-                                    modifier = Modifier
-                                        .size(50.dp),
-                                    painter = painter,
-                                    contentScale = ContentScale.FillBounds,
-                                    contentDescription = ""
-                                )
-                            }
-
-                            Text(text = item.number)
-                        }
-                    }) { item, index, modifier ->
+                ) { item, index ->
                     val painter = rememberCoilPainter(request = item.iconRes)
                     Column(
-                        modifier
+                        Modifier
                             .padding(10.dp)
                             .height(100.dp)
                             .width(100.dp)
