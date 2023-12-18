@@ -171,7 +171,11 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                 }
 
                 6 -> {
-                    Cards(navTag = NavTag.SimpleScrollView, text = "ScrollView", navTo = navTo)
+                    Cards(
+                        navTag = NavTag.SimpleCircleProgress,
+                        text = "CircleProgress",
+                        navTo = navTo
+                    )
                 }
 
                 7 -> {
@@ -185,7 +189,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                 8 -> {
                     Cards(
                         navTag = NavTag.SimpleDraggableInsertList,
-                        text = "DraggableInsertOffset",
+                        text = "DraggableInsertList",
                         navTo = navTo
                     )
                 }
@@ -217,13 +221,6 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                     Cards(
                         navTag = NavTag.SimpleCurveChart,
                         text = "CurveChart",
-                        navTo = navTo
-                    )
-                }
-                13 -> {
-                    Cards(
-                        navTag = NavTag.SimpleCircleProgress,
-                        text = "CircleProgress",
                         navTo = navTo
                     )
                 }

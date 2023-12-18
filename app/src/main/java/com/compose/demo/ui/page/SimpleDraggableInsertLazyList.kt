@@ -82,35 +82,12 @@ fun SimpleDraggableInsertLazyList() {
                 DraggableInsertLazyColumn(
                     data = data,
                     onExchangeEnd = { sourceIndex, targetIndex ->
-                        val temp = data[sourceIndex]
-                        data.removeAt(sourceIndex)
-                        data.add(targetIndex, temp)
+                        data.add(targetIndex, data.removeAt(sourceIndex))
                     },
-                    hoverItemContent = { item, index ->
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp)
-                                .height(100.dp)
-                                .background(color = item.color),
-                            horizontalArrangement = Arrangement.spacedBy(20.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            val painter = rememberCoilPainter(request = item.iconRes)
-                            Image(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(150.dp),
-                                painter = painter,
-                                contentScale = ContentScale.FillBounds,
-                                contentDescription = ""
-                            )
-                            Text(text = item.number)
-                        }
-                    }) { item, index, modifier ->
+                ) { item, index ->
                     val painter = rememberCoilPainter(request = item.iconRes, fadeIn = true)
                     Row(
-                        modifier
+                        Modifier
                             .fillMaxWidth()
                             .padding(10.dp)
                             .height(100.dp)
@@ -151,6 +128,9 @@ fun SimpleDraggableInsertLazyList() {
                 DraggableInsertLazyGrid(
                     columCount = 6,
                     data = data,
+                    onExchangeEnd = { sourceIndex: Int, targetIndex: Int ->
+                        data.add(targetIndex, data.removeAt(sourceIndex))
+                    }
                 ) { item, index ->
                     val painter = rememberCoilPainter(request = item.iconRes)
                     Column(
