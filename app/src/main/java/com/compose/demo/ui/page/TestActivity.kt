@@ -47,7 +47,6 @@ enum class NavTag {
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
     SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList,
     SimpleCustomTabRow,SimpleDropDownList,SimpleCurveChart,SimpleCircleProgress,SimpleCustomTheme,
-    SimpleDraggableInsertModifier
 }
 
 class TestActivity : ComponentActivity() {
@@ -131,11 +130,7 @@ class TestActivity : ComponentActivity() {
                         SimpleTheme()
                     }
                 }
-                composable(NavTag.SimpleDraggableInsertModifier.name) {
-                    MyNavigation(controller = navController) { _, _ ->
-                        SimpleDraggableInsertModifier()
-                    }
-                }
+
             }
         }
     }
@@ -240,13 +235,6 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                     Cards(
                         navTag = NavTag.SimpleCustomTheme,
                         text = "CustomTheme",
-                        navTo = navTo
-                    )
-                }
-                14 -> {
-                    Cards(
-                        navTag = NavTag.SimpleDraggableInsertModifier,
-                        text = "DraggableInsertModifier",
                         navTo = navTo
                     )
                 }
