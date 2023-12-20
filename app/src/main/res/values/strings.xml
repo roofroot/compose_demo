@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">compose_demo</string>
+    <!--CalendarView-->
+    <string name="calendar_January">January</string>
+    <string name="calendar_February">February</string>
+    <string name="calendar_March">March</string>
+    <string name="calendar_April">April</string>
+    <string name="calendar_May">May</string>
+    <string name="calendar_June">June</string>
+    <string name="calendar_July">July</string>
+    <string name="calendar_August">August</string>
+    <string name="calendar_September">September</string>
+    <string name="calendar_October">October</string>
+    <string name="calendar_November">November</string>
+    <string name="calendar_December">December</string>
+
+    <string name="calendar_SUN">SUN</string>
+    <string name="calendar_MON">MON</string>
+    <string name="calendar_TUE">TUE</string>
+    <string name="calendar_WED">WED</string>
+    <string name="calendar_THU">THU</string>
+    <string name="calendar_FRI">FRI</string>
+    <string name="calendar_SAT">SAT</string>
 </resources>

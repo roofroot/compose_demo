@@ -42,7 +42,7 @@ fun ScrollView(
         scrollViewHeight.value=it.size.height
         scrollViewWidth.value=it.size.width
     }) {
-        Column(
+        Box(
             modifier.verticalScroll(scrollState)
         ) {
             content()

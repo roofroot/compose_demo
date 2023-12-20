@@ -40,12 +40,14 @@ import com.compose.demo.ui.theme.pink
 import com.compose.demo.ui.theme.plum
 import com.compose.demo.widget.GradientText
 import com.desaysv.hmicomponents.compose.SimpleDraggableInsertLazyList
+import com.desaysv.hmicomponents.compose.SimpleDraggableInsertModifier
 
 enum class NavTag {
     NavPage, SimpleScrollView, SimpleCirculatePager,
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
     SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList,
-    SimpleCustomTabRow,SimpleDropDownList,SimpleCurveChart,SimpleCircleProgress
+    SimpleCustomTabRow,SimpleDropDownList,SimpleCurveChart,SimpleCircleProgress,SimpleCustomTheme,
+    SimpleDraggableInsertModifier
 }
 
 class TestActivity : ComponentActivity() {
@@ -124,6 +126,16 @@ class TestActivity : ComponentActivity() {
                         SimpleCircleProgress()
                     }
                 }
+                composable(NavTag.SimpleCustomTheme.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleTheme()
+                    }
+                }
+                composable(NavTag.SimpleDraggableInsertModifier.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleDraggableInsertModifier()
+                    }
+                }
             }
         }
     }
@@ -132,7 +144,7 @@ class TestActivity : ComponentActivity() {
 @Composable
 fun NavPage(navTo: (tag: String) -> Unit) {
     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(5)) {
-        items(14) {
+        items(15) {
             when (it) {
                 0 -> {
                     Cards(
@@ -221,6 +233,20 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                     Cards(
                         navTag = NavTag.SimpleCurveChart,
                         text = "CurveChart",
+                        navTo = navTo
+                    )
+                }
+                13 -> {
+                    Cards(
+                        navTag = NavTag.SimpleCustomTheme,
+                        text = "CustomTheme",
+                        navTo = navTo
+                    )
+                }
+                14 -> {
+                    Cards(
+                        navTag = NavTag.SimpleDraggableInsertModifier,
+                        text = "DraggableInsertModifier",
                         navTo = navTo
                     )
                 }
