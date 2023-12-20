@@ -303,11 +303,11 @@ fun CalenderViewPreview() {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         CalenderView(
             Modifier
-                .width(200.dp)
+                .width(400.dp)
                 .height(400.dp),
             Modifier.background(Color.Gray),
             Modifier
-                .width(200.dp)
+                .width(400.dp)
                 .height(50.dp),
             selectTime = selectTime
         )
