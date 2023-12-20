@@ -46,7 +46,8 @@ enum class NavTag {
     NavPage, SimpleScrollView, SimpleCirculatePager,
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
     SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList,
-    SimpleCustomTabRow,SimpleDropDownList,SimpleCurveChart,SimpleCircleProgress,SimpleCustomTheme,
+    SimpleCustomTabRow, SimpleDropDownList, SimpleCurveChart, SimpleCircleProgress, SimpleCustomTheme,
+    SimpleGridView, SimpleCalendarView
 }
 
 class TestActivity : ComponentActivity() {
@@ -131,6 +132,16 @@ class TestActivity : ComponentActivity() {
                     }
                 }
 
+                composable(NavTag.SimpleGridView.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleGridView()
+                    }
+                }
+                composable(NavTag.SimpleCalendarView.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleCalendarView()
+                    }
+                }
             }
         }
     }
@@ -139,7 +150,7 @@ class TestActivity : ComponentActivity() {
 @Composable
 fun NavPage(navTo: (tag: String) -> Unit) {
     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(5)) {
-        items(15) {
+        items(16) {
             when (it) {
                 0 -> {
                     Cards(
@@ -224,6 +235,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                         navTo = navTo
                     )
                 }
+
                 12 -> {
                     Cards(
                         navTag = NavTag.SimpleCurveChart,
@@ -231,10 +243,27 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                         navTo = navTo
                     )
                 }
+
                 13 -> {
                     Cards(
                         navTag = NavTag.SimpleCustomTheme,
                         text = "CustomTheme",
+                        navTo = navTo
+                    )
+                }
+
+                14 -> {
+                    Cards(
+                        navTag = NavTag.SimpleGridView,
+                        text = "GridView",
+                        navTo = navTo
+                    )
+                }
+
+                15 -> {
+                    Cards(
+                        navTag = NavTag.SimpleCalendarView,
+                        text = "CalendarView",
                         navTo = navTo
                     )
                 }
