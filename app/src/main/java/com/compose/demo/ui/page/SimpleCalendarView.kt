@@ -2,6 +2,7 @@ package com.compose.demo.ui.page
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -23,7 +24,7 @@ fun SimpleCalendarView() {
         CalenderView(
             Modifier
                 .width(400.dp)
-                .height(400.dp),
+                .height(500.dp),
             Modifier.background(Color.Gray),
             Modifier
                 .width(400.dp)

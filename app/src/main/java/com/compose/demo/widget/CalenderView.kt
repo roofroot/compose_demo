@@ -1,14 +1,17 @@
 package com.compose.demo.widget
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.animation.with
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,10 +28,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,12 +42,11 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.compose.demo.R
 import com.compose.demo.layout.GridLayout
-import com.compose.demo.widget.CalenderUtil
+import kotlinx.coroutines.launch
 import java.util.Date
 
 @Composable
@@ -83,18 +88,8 @@ private fun onDisableDayClick(
 ) {
     if (time < monthTime.value) {
         monthTime.value = CalenderUtil.getLastMonth(monthTime.value)
-        if (selectTime.contains(time)) {
-            selectTime.remove(time)
-        } else {
-            selectTime.add(time)
-        }
     } else if (time > monthTime.value) {
         monthTime.value = CalenderUtil.getNextMonth(monthTime.value)
-        if (selectTime.contains(time)) {
-            selectTime.remove(time)
-        } else {
-            selectTime.add(time)
-        }
     }
 }
 
@@ -107,30 +102,24 @@ fun DaySelectView(
     onDayClick: (time: Long) -> Unit,
     onDisableDayClick: (time: Long) -> Unit
 ) {
-    AnimatedContent(
-        targetState = monthTime.value,
-        transitionSpec = {
-            ContentTransformAnim(initialState, targetState)
-        },
-        contentAlignment = Alignment.TopCenter
-    ) { time ->
-        GridLayout(
-            modifier = modifier,
-            columns = 7,
-            rows = 7,
-            fixed = true,
-            spaceV = 1.dp,
-            spaceH = 1.dp
-        ) {
-            weekBar()
-            dayView(
-                selectTime = selectTime,
-                monthTime = time,
-                onDayClick = onDayClick,
-                onDisableDayClick = onDisableDayClick
-            )
-        }
+
+    GridLayout(
+        modifier = modifier,
+        columns = 7,
+        rows = 7,
+        fixed = true,
+        spaceV = 1.dp,
+        spaceH = 1.dp
+    ) {
+        weekBar()
+        dayView(
+            selectTime = selectTime,
+            monthTime = monthTime.value,
+            onDayClick = onDayClick,
+            onDisableDayClick = onDisableDayClick
+        )
     }
+
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -169,15 +158,16 @@ fun MonthSelectBar(monthViewModifier: Modifier, monthTime: MutableState<Long>) {
             contentAlignment = Alignment.Center
         ) { time ->
             val date = Date(time)
-            GradientText(
-                modifier = Modifier.fillMaxSize(),
+            Text(
+                modifier = Modifier.wrapContentSize(),
                 text = "${stringResource(id = CalenderUtil.getMonthString(date = date))} ${
                     CalenderUtil.getYear(
                         Date(
                             time
                         )
                     )
-                }"
+                }",
+                fontSize = 33.sp
             )
         }
 
@@ -303,13 +293,14 @@ fun CalenderViewPreview() {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         CalenderView(
             Modifier
-                .width(400.dp)
-                .height(400.dp),
+                .width(620.dp)
+                .height(692.dp),
             Modifier.background(Color.Gray),
             Modifier
-                .width(400.dp)
-                .height(50.dp),
+                .width(620.dp)
+                .height(100.dp),
             selectTime = selectTime
         )
     }
+
 }

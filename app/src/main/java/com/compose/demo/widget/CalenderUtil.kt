@@ -41,7 +41,7 @@ class CalenderUtil {
         fun getMonthData(long: Long = System.currentTimeMillis()): MonthData {
             var cal = Calendar.getInstance()
             cal.time = Date(long)
-            Log.e("aaaaaa", cal.toString())
+//            Log.e("aaaaaa", cal.toString())
             cal[Calendar.DAY_OF_MONTH] = 1 // M月置1
             cal[Calendar.HOUR_OF_DAY] = 0 // H置零
             cal[Calendar.MINUTE] = 0 // m置零
