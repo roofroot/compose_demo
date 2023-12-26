@@ -183,7 +183,7 @@ fun <T> DraggableInsertLazyColumn(
         state = scrollstate
     ) {
         items(data.size, {
-            if (it == 0) {
+            if (it == 0 && scrollstate.canScrollForward) {
                 0
             } else {
                 data[it].hashCode()
@@ -376,7 +376,7 @@ fun <T> DraggableInsertLazyGrid(
         state = scrollstate
     ) {
         items(data.size, {
-            if (it == 0) {
+            if (it == 0 && scrollstate.canScrollForward) {
                 0
             } else {
                 data[it].hashCode()

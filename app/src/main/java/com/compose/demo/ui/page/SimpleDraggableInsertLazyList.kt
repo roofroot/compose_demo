@@ -112,7 +112,7 @@ fun SimpleDraggableInsertLazyList() {
                     mutableListOf<MyListData>()
                 }
                 data.clear()
-                for (i in 1..100) {
+                for (i in 1..200) {
                     var resIcon = R.mipmap.img_3;
                     if (i % 4 == 0) {
                         resIcon = R.mipmap.img_0
