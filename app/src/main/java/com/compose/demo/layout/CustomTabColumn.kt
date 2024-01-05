@@ -38,7 +38,20 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
+/**
+ * @param modifier Modifier
+ * @param selectedIndex MutableState<Int> 当前选中的index
+ * @param data List<T> 数据列表
+ * @param indicatorContent [@androidx.compose.runtime.Composable] Function0<Unit> 自定义指示器
+ * @param indicatorAlignment Alignment 指示器的对齐方式
+ * @param autoFixedContent Boolean 是否自适应大小，如果设置为true ,配合 place count会自动计算每个 item的大小,不设置placeCount,根据data的size计算
+ * @param placeCount Int 用于autoFixedContent为true时计算大小，控件一页展示的数据总数
+ * @param autoScroll Boolean 是否自动滚动，用于列表数据超过屏幕时是否自动滚动的设置
+ * @param frontIndicator Boolean 指定指示器是在item前景还是背景
+ * @param verticalArrangement Arrangement.Vertical item的对齐方式
+ * @param tabContent [@androidx.compose.runtime.Composable] Function3<[@kotlin.ParameterName] T, [@kotlin.ParameterName] Int, [@kotlin.ParameterName] Boolean, Unit>
+ *     item的样式
+ */
 @Composable
 fun <T> CustomTabColumn(
     modifier: Modifier = Modifier,
