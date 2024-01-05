@@ -47,7 +47,7 @@ enum class NavTag {
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
     SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList,
     SimpleCustomTabRow, SimpleDropDownList, SimpleCurveChart, SimpleCircleProgress, SimpleCustomTheme,
-    SimpleGridView, SimpleCalendarView, SimpleNav
+    SimpleGridView, SimpleCalendarView, SimpleNav,SimpleCustomTabColumn
 }
 
 class TestActivity : ComponentActivity() {
@@ -147,6 +147,11 @@ class TestActivity : ComponentActivity() {
                         SimpleNav()
                     }
                 }
+                composable(NavTag.SimpleCustomTabColumn.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleCustomTabColumn()
+                    }
+                }
             }
         }
     }
@@ -155,7 +160,7 @@ class TestActivity : ComponentActivity() {
 @Composable
 fun NavPage(navTo: (tag: String) -> Unit) {
     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(5)) {
-        items(17) {
+        items(18) {
             when (it) {
                 0 -> {
                     Cards(
@@ -276,6 +281,13 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                     Cards(
                         navTag = NavTag.SimpleNav,
                         text = "SimpleNav",
+                        navTo = navTo
+                    )
+                }
+                17 -> {
+                    Cards(
+                        navTag = NavTag.SimpleCustomTabColumn,
+                        text = "SimpleCustomTabColumn",
                         navTo = navTo
                     )
                 }

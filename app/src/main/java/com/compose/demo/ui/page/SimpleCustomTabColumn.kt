@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,10 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.compose.demo.layout.CustomTabColumn
 import com.compose.demo.layout.CustomTabRow
 
 @Composable
-fun SimpleCustomTabRow() {
+fun SimpleCustomTabColumn() {
     val list = ArrayList<String>()
     for (i in 0..5) {
         list.add("item ${i}")
@@ -38,15 +41,15 @@ fun SimpleCustomTabRow() {
     val selectedIndex2 = remember {
         mutableStateOf(0)
     }
-    Column(
+    Row(
         modifier = Modifier.padding(10.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
+        horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally)
     ) {
-        CustomTabRow(
+        CustomTabColumn(
             modifier = Modifier
                 .background(Color.Gray, RoundedCornerShape(25.dp))
-                .fillMaxWidth()
-                .height(50.dp),
+                .width(100.dp)
+                .fillMaxHeight(),
             selectedIndex = selectedIndex,
             frontIndicator = false,
             data = list,
@@ -74,11 +77,11 @@ fun SimpleCustomTabRow() {
             }
 
         }
-        CustomTabRow(
+        CustomTabColumn(
             modifier = Modifier
                 .background(Color.Gray, RoundedCornerShape(25.dp))
-                .fillMaxWidth()
-                .height(50.dp),
+                .width(100.dp)
+                .fillMaxHeight(),
             selectedIndex = selectedIndex,
             frontIndicator = false,
             data = list,
@@ -96,7 +99,7 @@ fun SimpleCustomTabRow() {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(100.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -106,19 +109,19 @@ fun SimpleCustomTabRow() {
             }
 
         }
-        CustomTabRow(
+        CustomTabColumn(
             modifier = Modifier
                 .background(Color.Gray, RoundedCornerShape(25.dp))
-                .fillMaxWidth()
-                .height(50.dp),
+                .width(100.dp)
+                .fillMaxHeight(),
             selectedIndex = selectedIndex,
             data = list,
             indicatorContent = {
                 Box(
                     Modifier
                         .background(Color.Blue, RoundedCornerShape(25.dp))
-                        .width(100.dp)
-                        .height(5.dp)
+                        .width(5.dp)
+                        .height(50.dp)
                 ) {
 
                 }
@@ -127,7 +130,7 @@ fun SimpleCustomTabRow() {
             Box(
                 modifier = Modifier
                     .width(100.dp)
-                    .height(50.dp), contentAlignment = Alignment.Center
+                    .height(100.dp), contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = item,
@@ -137,20 +140,21 @@ fun SimpleCustomTabRow() {
 
         }
 
-        CustomTabRow(
+        CustomTabColumn(
             modifier = Modifier
+                .width(100.dp)
+                .height(500.dp)
                 .background(Color.Gray, RoundedCornerShape(25.dp))
-                .fillMaxWidth()
-                .height(50.dp)
-                .clip(RoundedCornerShape(25.dp)),
+                .clip(RoundedCornerShape(25.dp))
+            ,
             selectedIndex = selectedIndex2,
             data = list2,
             indicatorContent = {
                 Box(
                     Modifier
                         .background(Color.Blue, RoundedCornerShape(25.dp))
-                        .width(50.dp)
-                        .height(5.dp)
+                        .width(5.dp)
+                        .height(50.dp)
                 ) {
 
                 }
