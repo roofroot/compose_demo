@@ -47,7 +47,7 @@ enum class NavTag {
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
     SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList,
     SimpleCustomTabRow, SimpleDropDownList, SimpleCurveChart, SimpleCircleProgress, SimpleCustomTheme,
-    SimpleGridView, SimpleCalendarView, SimpleNav,SimpleCustomTabColumn
+    SimpleGridView, SimpleCalendarView, SimpleNav, SimpleCustomTabColumn, SimpleScrollBar,
 }
 
 class TestActivity : ComponentActivity() {
@@ -152,6 +152,13 @@ class TestActivity : ComponentActivity() {
                         SimpleCustomTabColumn()
                     }
                 }
+
+                composable(NavTag.SimpleScrollBar.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleScrollBar()
+                    }
+                }
+
             }
         }
     }
@@ -160,7 +167,7 @@ class TestActivity : ComponentActivity() {
 @Composable
 fun NavPage(navTo: (tag: String) -> Unit) {
     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(5)) {
-        items(18) {
+        items(19) {
             when (it) {
                 0 -> {
                     Cards(
@@ -277,6 +284,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                         navTo = navTo
                     )
                 }
+
                 16 -> {
                     Cards(
                         navTag = NavTag.SimpleNav,
@@ -284,10 +292,19 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                         navTo = navTo
                     )
                 }
+
                 17 -> {
                     Cards(
                         navTag = NavTag.SimpleCustomTabColumn,
                         text = "SimpleCustomTabColumn",
+                        navTo = navTo
+                    )
+                }
+
+                18 -> {
+                    Cards(
+                        navTag = NavTag.SimpleScrollBar,
+                        text = "SimpleScrollBar",
                         navTo = navTo
                     )
                 }
