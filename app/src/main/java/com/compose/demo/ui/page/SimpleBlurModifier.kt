@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -98,9 +100,19 @@ fun SimpleBlurModifier() {
                     "text1",
                     state,
                     CustomOption(
-                        rectRadiusX = 0.05f,
-                        rectRadiusY = 0.3f,
+                        rectRadiusX = 0.02f,
+                        rectRadiusY = 0.1f,
                         colorBlend = Color.Black.toArgb()
+                    )
+                )
+                .alpha(0.2f)
+                .background(
+                    Color.Black,
+                    RoundedCornerShape(
+                        topStartPercent = 10,
+                        topEndPercent = 10,
+                        bottomStartPercent = 10,
+                        bottomEndPercent = 10
                     )
                 )
                 .align(Alignment.CenterStart)
