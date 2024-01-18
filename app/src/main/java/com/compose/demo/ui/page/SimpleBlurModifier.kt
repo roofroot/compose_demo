@@ -41,13 +41,12 @@ import com.compose.demo.widget.customParentBlur
 import com.compose.demo.widget.getBlurState
 import com.compose.demo.widget.getPentagramShapePath
 import com.compose.demo.widget.getScrollBarState
-import com.compose.demo.widget.itemScrollBar
-import com.compose.demo.widget.scrollbar
 import com.google.accompanist.coil.rememberCoilPainter
 
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun SimpleScrollBar() {
+fun SimpleBlurModifier() {
 
     val data = remember {
         mutableListOf<MyListData>()
@@ -67,46 +66,78 @@ fun SimpleScrollBar() {
             data.add(MyListData(getRandomColor(), "000000" + i, resIcon))
         }
     }
-    list(data = data)
-
-}
-
-
-@Composable
-private fun list(data: List<MyListData>) {
-    val state = rememberLazyListState()
-    val scrollBarState = getScrollBarState()
-    LazyColumn(
-        modifier = Modifier
-            .scrollbar(state = state, scrollBarState = scrollBarState)
-            .fillMaxSize(), state = state
+    val state = getBlurState()
+    Box(
     ) {
-        itemsIndexed(data) { index: Int, item: MyListData ->
-            val painter = rememberCoilPainter(request = item.iconRes)
-            Row(
-                Modifier
-                    .itemScrollBar(index, scrollBarState)
-                    .fillMaxWidth()
-                    .padding(10.dp)
-                    .height(100.dp)
-                    .background(color = item.color),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(150.dp),
-                    painter = painter,
-                    contentScale = ContentScale.FillBounds,
-                    contentDescription = ""
-                )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .customParentBlur(30f, state)
+        ) {
+            itemsIndexed(data) { index: Int, item: MyListData ->
+                val painter = rememberCoilPainter(request = item.iconRes)
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .height(100.dp)
+                        .background(color = item.color),
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(150.dp),
+                        painter = painter,
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = ""
+                    )
 
-                Text(text = item.number)
+                    Text(text = item.number)
+                }
             }
         }
+        Box(
+            modifier = Modifier
+                .padding(10.dp)
+                .customChildBlur(
+                    "text1",
+                    state,
+                    CustomOption(rectRadiusX = 0.05f, rectRadiusY = 0.3f, colorBlend = Color.BLACK)
+                )
+                .align(Alignment.CenterStart)
+                .width(500.dp)
+                .height(100.dp)
+        )
+        Box(
+            modifier = Modifier
+                .padding(10.dp)
+                .customChildBlur(
+                    "text2",
+                    state,
+                    CustomOption(shapeType = 1)
+                )
+                .align(Alignment.TopStart)
+                .size(100.dp)
+        )
+
+        Box(
+            modifier = Modifier
+                .padding(10.dp)
+                .customChildBlur(
+                    "text3",
+                    state,
+                    CustomOption(shapeType = 2, path = getPentagramShapePath(Size(100f, 100f)))
+                )
+                .align(Alignment.BottomStart)
+                .size(200.dp)
+        )
+
     }
 
 }
+
+
 
 

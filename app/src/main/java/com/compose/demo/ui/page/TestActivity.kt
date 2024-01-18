@@ -1,8 +1,10 @@
 package com.compose.demo.ui.page
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -47,10 +49,11 @@ enum class NavTag {
     SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
     SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList,
     SimpleCustomTabRow, SimpleDropDownList, SimpleCurveChart, SimpleCircleProgress, SimpleCustomTheme,
-    SimpleGridView, SimpleCalendarView, SimpleNav, SimpleCustomTabColumn, SimpleScrollBar,
+    SimpleGridView, SimpleCalendarView, SimpleNav, SimpleCustomTabColumn, SimpleScrollBar, SimpleBlurModifier
 }
 
 class TestActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -159,6 +162,12 @@ class TestActivity : ComponentActivity() {
                     }
                 }
 
+                composable(NavTag.SimpleBlurModifier.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SimpleBlurModifier()
+                    }
+                }
+
             }
         }
     }
@@ -167,7 +176,7 @@ class TestActivity : ComponentActivity() {
 @Composable
 fun NavPage(navTo: (tag: String) -> Unit) {
     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(5)) {
-        items(19) {
+        items(20) {
             when (it) {
                 0 -> {
                     Cards(
@@ -305,6 +314,13 @@ fun NavPage(navTo: (tag: String) -> Unit) {
                     Cards(
                         navTag = NavTag.SimpleScrollBar,
                         text = "SimpleScrollBar",
+                        navTo = navTo
+                    )
+                }
+                19 -> {
+                    Cards(
+                        navTag = NavTag.SimpleBlurModifier,
+                        text = "SimpleBlurModifier",
                         navTo = navTo
                     )
                 }

@@ -243,6 +243,7 @@ class FlowerShape(
         return Outline.Generic(path)
     }
 }
+
 class TriangleShape(
 ) : Shape {
     override fun createOutline(
@@ -258,6 +259,24 @@ class TriangleShape(
         path.lineTo(rect.right, rect.top)
         path.lineTo(rect.size.width / 2, rect.bottom)
         path.close()
+        return Outline.Generic(path)
+    }
+}
+
+class RectShape(
+    rect: Rect?
+) : Shape {
+    val rect: Rect? = rect
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        var path = Path();
+        rect?.let {
+            path.addRect(rect)
+            path.close()
+        }
         return Outline.Generic(path)
     }
 }
