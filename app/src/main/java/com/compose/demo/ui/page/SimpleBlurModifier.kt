@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -66,15 +67,16 @@ fun SimpleBlurModifier() {
     ) {
         LazyColumn(
             modifier = Modifier
+                .background(Color.Blue)
                 .fillMaxSize()
                 .customParentBlur(30f, state)
         ) {
             itemsIndexed(data) { index: Int, item: MyListData ->
+                Spacer(modifier = Modifier.height(20.dp).fillMaxWidth().background(Color.White))
                 val painter = rememberCoilPainter(request = item.iconRes)
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(10.dp)
                         .height(100.dp)
                         .background(color = item.color),
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
