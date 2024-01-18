@@ -57,6 +57,7 @@ data class CustomOption(
     val rectRadiusX: Float = 0f,
     val rectRadiusY: Float = 0f,
     val path: android.graphics.Path? = null,
+    val pathSize: Size = Size(100f, 100f),
     val colorBlend: Int = Color.White.toArgb()
 )
 
@@ -139,8 +140,8 @@ fun Modifier.customParentBlur(blur: Float, blurState: BlurState) = this.then(gra
 
                     2 -> {
                         bitmap = Bitmap.createBitmap(
-                            rect.width.toInt() + (option.rectRadiusX * rect.width * 2).toInt(),
-                            rect.height.toInt() + (option.rectRadiusY * rect.height * 2).toInt(),
+                            option.pathSize.width.toInt(),
+                            option.pathSize.height.toInt(),
                             Bitmap.Config.ARGB_8888
                         )
                         val canvas = Canvas(bitmap)
@@ -273,7 +274,7 @@ fun getPentagramShapePath(
             path.close()
         }
     }
-    val matrix=Matrix()
+    val matrix = Matrix()
     matrix.postTranslate(size.width / 2, size.height / 2)
     path.transform(matrix)
     return path

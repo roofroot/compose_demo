@@ -1,13 +1,7 @@
 package com.compose.demo.ui.page
 
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,25 +16,24 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.compose.demo.R
+import com.compose.demo.shape.pentagramShape
 import com.compose.demo.widget.CustomOption
 import com.compose.demo.widget.customChildBlur
 import com.compose.demo.widget.customParentBlur
 import com.compose.demo.widget.getBlurState
 import com.compose.demo.widget.getPentagramShapePath
-import com.compose.demo.widget.getScrollBarState
 import com.google.accompanist.coil.rememberCoilPainter
 
 
@@ -104,7 +97,11 @@ fun SimpleBlurModifier() {
                 .customChildBlur(
                     "text1",
                     state,
-                    CustomOption(rectRadiusX = 0.05f, rectRadiusY = 0.3f, colorBlend = Color.BLACK)
+                    CustomOption(
+                        rectRadiusX = 0.05f,
+                        rectRadiusY = 0.3f,
+                        colorBlend = Color.Black.toArgb()
+                    )
                 )
                 .align(Alignment.CenterStart)
                 .width(500.dp)
@@ -125,12 +122,18 @@ fun SimpleBlurModifier() {
         Box(
             modifier = Modifier
                 .padding(10.dp)
+                .alpha(0.3f)
                 .customChildBlur(
                     "text3",
                     state,
-                    CustomOption(shapeType = 2, path = getPentagramShapePath(Size(100f, 100f)))
+                    CustomOption(
+                        shapeType = 2,
+                        path = getPentagramShapePath(Size(100f, 100f)),
+                        pathSize = Size(100f, 100f)
+                    )
                 )
                 .align(Alignment.BottomStart)
+                .background(Color.Black, shape = pentagramShape())
                 .size(200.dp)
         )
 
