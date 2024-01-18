@@ -107,16 +107,6 @@ fun SimpleBlurModifier() {
                         colorBlend = Color.Black.toArgb()
                     )
                 )
-                .alpha(0.2f)
-                .background(
-                    Color.Black,
-                    RoundedCornerShape(
-                        topStartPercent = 10,
-                        topEndPercent = 10,
-                        bottomStartPercent = 10,
-                        bottomEndPercent = 10
-                    )
-                )
                 .align(Alignment.CenterStart)
                 .width(500.dp)
                 .height(100.dp)
@@ -136,7 +126,6 @@ fun SimpleBlurModifier() {
         Box(
             modifier = Modifier
                 .padding(10.dp)
-                .alpha(0.3f)
                 .customChildBlur(
                     "text3",
                     state,
@@ -147,7 +136,6 @@ fun SimpleBlurModifier() {
                     )
                 )
                 .align(Alignment.BottomStart)
-                .background(Color.Black, shape = pentagramShape())
                 .size(200.dp)
         )
 
