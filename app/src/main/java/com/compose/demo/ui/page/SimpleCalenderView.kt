@@ -3,6 +3,7 @@ package com.compose.demo.ui.page
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -16,19 +17,16 @@ import androidx.compose.ui.unit.dp
 import com.compose.demo.widget.CalenderView
 
 @Composable
-fun SimpleCalendarView() {
+fun SimpleCalendarView(){
     val selectTime = remember {
         mutableStateListOf<Long>()
     }
-    Column(Modifier.verticalScroll(rememberScrollState())) {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         CalenderView(
+            Modifier.fillMaxWidth().height(800.dp),
+            Modifier.fillMaxWidth().height(700.dp).background(Color.Gray),
             Modifier
-                .width(400.dp)
-                .height(500.dp),
-            Modifier.background(Color.Gray),
-            Modifier
-                .width(400.dp)
-                .height(50.dp),
+                .fillMaxWidth().height(100.dp),
             selectTime = selectTime
         )
     }
