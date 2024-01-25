@@ -80,7 +80,8 @@ fun CalenderView(
     },
     monthSelectBar: @Composable (monthViewModifier: Modifier, monthTime: MutableState<Long>) -> Unit = { modifier: Modifier, monthTime: MutableState<Long> ->
         MonthSelectBar(monthViewModifier = modifier, monthTime = monthTime)
-    },fixed:Int =0,
+    },
+    fixed: Int = 0,
 ) {
     val monthTime = remember {
         mutableStateOf(CalenderUtil.getCurrentMonth(System.currentTimeMillis()))
@@ -107,10 +108,10 @@ fun CalenderView(
                 var count = 0
                 for (i in monthData.firstDayOfStartDaysWeek until monthData.firstDayOfStartDaysWeek + monthData.startDayOfWeek - 1) {
                     inactiveDay(
-                        CalenderUtil.getLastMonthDay(monthTime.value, i), dayStr = i.toString(), {
-                            onDisableDayClick(it, monthTime, selectTime)
-                        }
-                    )
+                        CalenderUtil.getLastMonthDay(monthTime.value, i), dayStr = i.toString()
+                    ) {
+                        onDisableDayClick(it, monthTime, selectTime)
+                    }
                     count++
                 }
                 for (i in monthData.startDay..monthData.endDay) {
@@ -129,10 +130,10 @@ fun CalenderView(
                 }
                 for (i in 1..7 - monthData.endDayOfWeek) {
                     inactiveDay(
-                        CalenderUtil.getLastMonthDay(monthTime.value, i), dayStr = i.toString(), {
-                            onDisableDayClick(it, monthTime, selectTime)
-                        }
-                    )
+                        CalenderUtil.getNextMonthDay(monthTime.value, i), dayStr = i.toString()
+                    ) {
+                        onDisableDayClick(it, monthTime, selectTime)
+                    }
                 }
             }
         }
