@@ -1,5 +1,6 @@
 package com.compose.demo.widget
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.EnterTransition
@@ -10,24 +11,33 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.with
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.compose.demo.R
 import com.compose.demo.layout.GridLayout
+import kotlinx.coroutines.launch
 import java.util.Date
 
 /**
@@ -59,6 +70,8 @@ import java.util.Date
  * @param fixed Int 日期部分的自适应效果，0,item的宽度高度都按照总高度与数量平均，1，item的宽度按照总宽度与总数平均，
  *  * 2，item的宽度按照总高度与数量平均，默认值是0
  */
+@SuppressLint("CoroutineCreationDuringComposition")
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalenderView(
     viewModifier: Modifier,
@@ -78,64 +91,141 @@ fun CalenderView(
     topWeekBar: @Composable () -> Unit = {
         weekBar()
     },
-    monthSelectBar: @Composable (monthViewModifier: Modifier, monthTime: MutableState<Long>) -> Unit = { modifier: Modifier, monthTime: MutableState<Long> ->
-        MonthSelectBar(monthViewModifier = modifier, monthTime = monthTime)
+    monthSelectBar: @Composable (monthViewModifier: Modifier, monthTime: MutableState<Long>, pagerState: PagerState, index: Int) -> Unit = { modifier: Modifier, monthTime: MutableState<Long>, pagerState, index ->
+        MonthSelectBar(
+            monthViewModifier = modifier,
+            monthTime = monthTime,
+            pagerState = pagerState,
+            index = index
+        )
     },
     fixed: Int = 0,
 ) {
+    val pagerState = rememberPagerState {
+        Int.MAX_VALUE
+    }
+    val scope = rememberCoroutineScope()
+
+    //对滑动到int最大值和0时做一下处理，虽然实际只用中，应该很少有机会会执行这段代码
+    if (pagerState.currentPage == Int.MAX_VALUE) {
+        scope.launch {
+            pagerState.scrollToPage(1000 * 3 + pagerState.currentPage)
+        }
+    } else if (pagerState.currentPage == 0) {
+        scope.launch {
+            pagerState.scrollToPage(1000 * 3)
+        }
+    }
     val monthTime = remember {
         mutableStateOf(CalenderUtil.getCurrentMonth(System.currentTimeMillis()))
     }
-    Column(
-        modifier = viewModifier, verticalArrangement = Arrangement.Top
-    ) {
-        monthSelectBar(monthSelectViewModifier, monthTime = monthTime)
-        AnimatedContent(
-            targetState = monthTime.value, transitionSpec = {
-                ContentTransformAnim(initialState, targetState)
-            }, contentAlignment = Alignment.Center, label = ""
-        ) { monthTimeLong ->
-            GridLayout(
-                modifier = daySelectViewModifier,
-                columns = 7,
-                rows = 7,
-                fixed = fixed,
-                spaceV = 1.dp,
-                spaceH = 1.dp
-            ) {
-                topWeekBar()
-                val monthData = CalenderUtil.getMonthData(monthTimeLong)
-                var count = 0
-                for (i in monthData.firstDayOfStartDaysWeek until monthData.firstDayOfStartDaysWeek + monthData.startDayOfWeek - 1) {
-                    inactiveDay(
-                        CalenderUtil.getLastMonthDay(monthTime.value, i), dayStr = i.toString()
-                    ) {
-                        onDisableDayClick(it, monthTime, selectTime)
-                    }
-                    count++
+    LaunchedEffect(Unit) {
+        snapshotFlow { pagerState.currentPage }.collect { newValue ->
+            if (olderPagerIndex != -1) {
+                if (pagerState.currentPage > olderPagerIndex) {
+                    olderPagerIndex = pagerState.currentPage
+                    monthTime.value = CalenderUtil.getNextMonth(monthTime.value)
+                } else if (pagerState.currentPage < olderPagerIndex) {
+                    olderPagerIndex = pagerState.currentPage
+                    monthTime.value = CalenderUtil.getLastMonth(monthTime.value)
                 }
-                for (i in monthData.startDay..monthData.endDay) {
-                    activeDay(
-                        selectTime = selectTime,
-                        dayTime = CalenderUtil.getCurrentMonthDay(monthTime.value, i),
-                        dayStr = i.toString(), onDayClick = { time ->
-                            if (selectTime.contains(time)) {
-                                selectTime.remove(time)
-                            } else {
-                                selectTime.add(time)
+            } else {
+                olderPagerIndex = pagerState.currentPage
+            }
+        }
+    }
+    Box(
+        modifier = viewModifier
+    ) {
+        HorizontalPager(state = pagerState) { index ->
+            Column(Modifier.fillMaxSize()) {
+                monthSelectBar(
+                    monthSelectViewModifier,
+                    monthTime = monthTime,
+                    pagerState,
+                    index
+                )
+
+                GridLayout(
+                    modifier = daySelectViewModifier,
+                    columns = 7,
+                    rows = 7,
+                    fixed = fixed,
+                    spaceV = 1.dp,
+                    spaceH = 1.dp
+                ) {
+                    topWeekBar()
+                    val time =
+                        if (index > pagerState.currentPage) CalenderUtil.getNextMonth(monthTime.value)
+                        else if (index < pagerState.currentPage) CalenderUtil.getLastMonth(
+                            monthTime.value
+                        ) else monthTime.value
+                    val monthData = CalenderUtil.getMonthData(time)
+                    var count = 0
+                    for (i in monthData.firstDayOfStartDaysWeek until monthData.firstDayOfStartDaysWeek + monthData.startDayOfWeek - 1) {
+                        inactiveDay(
+                            CalenderUtil.getLastMonthDay(time, i), dayStr = i.toString()
+                        ) {
+                            if (index == pagerState.currentPage) {
+                                onDisableDayClick(it, monthTime, selectTime)
                             }
                         }
-                    )
-                    count++
-                }
-                for (i in 1..7 - monthData.endDayOfWeek) {
-                    inactiveDay(
-                        CalenderUtil.getNextMonthDay(monthTime.value, i), dayStr = i.toString()
-                    ) {
-                        onDisableDayClick(it, monthTime, selectTime)
+                        count++
+                    }
+                    for (i in monthData.startDay..monthData.endDay) {
+                        activeDay(selectTime = selectTime,
+                            dayTime = CalenderUtil.getCurrentMonthDay(time, i),
+                            dayStr = i.toString(),
+                            onDayClick = { time ->
+                                if (index == pagerState.currentPage) {
+                                    if (selectTime.contains(time)) {
+                                        selectTime.remove(time)
+                                    } else {
+                                        selectTime.add(time)
+                                    }
+                                }
+                            })
+                        count++
+                    }
+                    for (i in 1..7 - monthData.endDayOfWeek) {
+                        inactiveDay(
+                            CalenderUtil.getNextMonthDay(time, i), dayStr = i.toString()
+                        ) {
+                            if (index == pagerState.currentPage) {
+                                onDisableDayClick(it, monthTime, selectTime)
+                            }
+                        }
                     }
                 }
             }
+
+        }
+        Box(monthSelectViewModifier) {
+            Image(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .align(Alignment.CenterStart)
+                    .clickable {
+//                    monthTime.value = CalenderUtil.getLastMonth(monthTime.value)
+                        scope.launch {
+                            pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                        }
+                    },
+                painter = painterResource(id = R.drawable.ic_arrow_left),
+                contentDescription = "",
+            )
+            Image(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(10.dp)
+                    .clickable {
+                        scope.launch {
+                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        }
+                    },
+                painter = painterResource(id = R.drawable.ic_arrow_right),
+                contentDescription = "",
+            )
         }
     }
 }
@@ -150,80 +240,38 @@ private fun onDisableDayClick(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+var olderPagerIndex = -1
+
+@SuppressLint("CoroutineCreationDuringComposition")
+@OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun MonthSelectBar(monthViewModifier: Modifier, monthTime: MutableState<Long>) {
+fun MonthSelectBar(
+    monthViewModifier: Modifier,
+    monthTime: MutableState<Long>,
+    pagerState: PagerState,
+    index: Int,
+) {
     Box(
         monthViewModifier
     ) {
-        val leftEnable = remember {
-            mutableStateOf(true)
-        }
-        val rightEnable = remember {
-            mutableStateOf(true)
-        }
-        Image(
+        val time = if (index > pagerState.currentPage) CalenderUtil.getNextMonth(monthTime.value)
+        else if (index < pagerState.currentPage) CalenderUtil.getLastMonth(
+            monthTime.value
+        ) else monthTime.value
+        var date = Date(time)
+        Text(
             modifier = Modifier
-                .padding(10.dp)
-                .align(Alignment.CenterStart)
-                .clickable {
-                    monthTime.value = CalenderUtil.getLastMonth(monthTime.value)
-                },
-            painter = painterResource(id = R.drawable.ic_arrow_left),
-            contentDescription = "",
-            colorFilter = if (leftEnable.value) null else ColorFilter.tint(Color.Gray)
-        )
-
-
-        AnimatedContent(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .width(480.dp),
-            targetState = monthTime.value,
-            transitionSpec = {
-                ContentTransformAnim(initialState, targetState)
-            },
-            contentAlignment = Alignment.Center
-        ) { time ->
-            val date = Date(time)
-            Text(
-                modifier = Modifier.wrapContentSize(),
-                text = "${stringResource(id = CalenderUtil.getMonthString(date = date))} ${
-                    CalenderUtil.getYear(
-                        Date(
-                            time
-                        )
-                    )
-                }",
-                fontSize = 33.sp
-            )
-        }
-
-        Image(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(10.dp)
-                .clickable {
-                    monthTime.value = CalenderUtil.getNextMonth(monthTime.value)
-                },
-            painter = painterResource(id = R.drawable.ic_arrow_right),
-            contentDescription = "",
-            colorFilter = if (rightEnable.value) null else ColorFilter.tint(Color.Gray)
+                .wrapContentSize()
+                .align(Alignment.Center),
+            text = "${stringResource(id = CalenderUtil.getMonthString(date = date))} ${
+                CalenderUtil.getYear(
+                    date
+                )
+            }",
+            fontSize = 33.sp
         )
     }
 }
-
-@OptIn(ExperimentalAnimationApi::class)
-fun ContentTransformAnim(initialState: Long, targetState: Long): ContentTransform {
-    return if (targetState!! < initialState!!) {
-        slideInHorizontally { fullWidth -> fullWidth } + fadeIn() with slideOutHorizontally { fullWidth -> -fullWidth } + fadeOut()
-    } else if (targetState!! > initialState!!) {
-        slideInHorizontally { fullWidth -> -fullWidth } + fadeIn() with slideOutHorizontally { fullWidth -> fullWidth } + fadeOut()
-    } else {
-        EnterTransition.None with ExitTransition.None
-    }
-}
-
 
 @Composable
 fun grayDateView(
@@ -282,6 +330,7 @@ fun weekBar() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun CalenderViewPreview() {

@@ -1,5 +1,6 @@
 package com.compose.demo.ui.page
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.compose.demo.widget.CalenderView
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SimpleCalendarView(){
     val selectTime = remember {
