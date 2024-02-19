@@ -2,6 +2,11 @@ package com.compose.demo.layout
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,11 +46,19 @@ fun <T> RefreshAndLoadMoreList(
     onLoading: suspend () -> Unit,
     onRefresh: suspend () -> Unit,
     listData: MutableList<T>,
-    state:LoadMoreAndRefreshListState,
+    state: LoadMoreAndRefreshListState,
     footerContent: (@Composable () -> Unit) = {
-        val angle = remember {
-            mutableStateOf(0f)
-        }
+        val infiniteTransition = rememberInfiniteTransition(label = "loading transition")
+        val rotateAnimation by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = 1000,
+                    easing = LinearEasing
+                )
+            ), label = "loading animation"
+        )
         Row(
             Modifier
                 .height(70.dp)
@@ -54,7 +68,7 @@ fun <T> RefreshAndLoadMoreList(
         ) {
             Box(
                 Modifier
-                    .rotate(angle.value)
+                    .rotate(rotateAnimation)
                     .size(30.dp)
                     .border(
                         5.dp,
@@ -71,19 +85,21 @@ fun <T> RefreshAndLoadMoreList(
 
             }
             Text(modifier = Modifier.padding(10.dp), text = "加载中···")
-            LaunchedEffect(Unit) {
-                while (true) {
-                    angle.value = ++angle.value % 360
-                    delay(2)
-                }
-            }
         }
 
     },
     headerContent: (@Composable () -> Unit) = {
-        val angle = remember {
-            mutableStateOf(0f)
-        }
+        val infiniteTransition = rememberInfiniteTransition(label = "loading transition")
+        val rotateAnimation by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = 1000,
+                    easing = LinearEasing
+                )
+            ), label = "loading animation"
+        )
         Row(
             Modifier
                 .height(70.dp)
@@ -93,7 +109,7 @@ fun <T> RefreshAndLoadMoreList(
         ) {
             Box(
                 Modifier
-                    .rotate(angle.value)
+                    .rotate(rotateAnimation)
                     .size(30.dp)
                     .border(
                         5.dp,
@@ -110,12 +126,6 @@ fun <T> RefreshAndLoadMoreList(
 
             }
             Text(modifier = Modifier.padding(10.dp), text = "刷新中···")
-            LaunchedEffect(Unit) {
-                while (true) {
-                    angle.value = ++angle.value % 360
-                    delay(2)
-                }
-            }
         }
 
     },

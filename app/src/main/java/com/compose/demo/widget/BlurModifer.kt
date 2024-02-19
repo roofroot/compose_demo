@@ -51,6 +51,7 @@ class BlurState {
  * shapeType 0，1 , 2 , 矩形，圆形，path自定义图形
  * rectRadiusX,Y  如果类型是0，可以设置矩形圆角，实际的圆角大小为实际控件宽高的百分比，例如rectRadiusX设置为0.1实际宽度是100，则在水平方向的圆角是10
  * path,如果设置了图形的type是2, 需要传入对应的path
+ * pathsize，不会影响实际的渲染大小，实际渲染大小会根据实际测量的尺寸，将这个path按照比例放大，如果path是固定的大小，应当设置为path绘制的实际大小
  */
 data class CustomOption(
     val shapeType: Int = 0,
