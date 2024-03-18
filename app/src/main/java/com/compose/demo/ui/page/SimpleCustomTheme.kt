@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,7 +16,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.compose.demo.nav.MyNavigation
 import com.compose.demo.theme.CustomSystem
+import com.compose.demo.theme.Language
 import com.compose.demo.theme.LocalCustomColor
+import com.compose.demo.theme.LocalCustomDimens
+import com.compose.demo.theme.LocalLanguage
 import com.compose.demo.theme.TestTheme
 import com.compose.demo.theme.customSystem1
 import com.compose.demo.theme.customSystem2
@@ -31,7 +36,8 @@ fun Home(
 ) {
     Column(
         Modifier
-            .fillMaxSize()
+            .width(LocalCustomDimens.current.mainPageWidth)
+            .padding(LocalCustomDimens.current.mainPadding)
             .background(LocalCustomColor.current.colorBg)
     ) {
         Text(text = "Home", fontSize = 30.sp)
@@ -51,14 +57,13 @@ fun Home(
 @Composable
 fun SimpleTheme() {
     val navController = rememberNavController()
-    TestTheme { onThemeChange ->
+    TestTheme { themeChange, languageChange ->
 
         NavHost(navController = navController, startDestination = ThemeNavTag.HOME.name) {
             composable(ThemeNavTag.HOME.name) {
                 MyNavigation(controller = navController) { navTo, navPopupTo ->
                     Home(navTo = navTo, navToPopup = navPopupTo)
                 }
-
             }
             composable(ThemeNavTag.LOGIN.name) {
                 MyNavigation(controller = navController) { navTo, _ ->
@@ -67,7 +72,11 @@ fun SimpleTheme() {
             }
             composable(ThemeNavTag.PAGE_ONE.name) {
                 MyNavigation(controller = navController) { navTo, _ ->
-                    PageOne(onNav = navTo, onThemeChange = onThemeChange)
+                    PageOne(
+                        onNav = navTo,
+                        themeChange = themeChange,
+                        changeLanguage = languageChange
+                    )
                 }
 
             }
@@ -95,7 +104,9 @@ fun Login(onNav: (tag: String) -> Unit) {
 
 @Composable
 fun PageOne(
-    onNav: (tag: String) -> Unit, onThemeChange: (theme: CustomSystem) -> Unit
+    onNav: (tag: String) -> Unit,
+    themeChange: (theme: CustomSystem) -> Unit,
+    changeLanguage: (language: Language) -> Unit
 ) {
     Column(
         Modifier
@@ -115,14 +126,37 @@ fun PageOne(
             Text(text = "to Home")
         }
         Row {
-            Button(onClick = { onThemeChange(customSystem1) }) {
-                Text(text = "主题一", color = LocalCustomColor.current.textColor)
+            Button(onClick = { themeChange(customSystem1) }) {
+                Text(
+                    text = if (LocalLanguage.current == Language.Chinese) "主题一" else "theme one",
+                    color = LocalCustomColor.current.textColor
+                )
             }
-            Button(onClick = { onThemeChange(customSystem2) }) {
-                Text(text = "主题二", color = LocalCustomColor.current.textColor)
+            Button(onClick = { themeChange(customSystem2) }) {
+                Text(
+                    text = if (LocalLanguage.current == Language.Chinese) "主题二" else "theme two",
+                    color = LocalCustomColor.current.textColor
+                )
             }
-            Button(onClick = { onThemeChange(customSystem3) }) {
-                Text(text = "主题三", color = LocalCustomColor.current.textColor)
+            Button(onClick = { themeChange(customSystem3) }) {
+                Text(
+                    text = if (LocalLanguage.current == Language.Chinese) "主题三" else "theme three",
+                    color = LocalCustomColor.current.textColor
+                )
+            }
+        }
+        Row {
+            Button(onClick = { changeLanguage(Language.Chinese) }) {
+                Text(
+                    text = if (LocalLanguage.current == Language.Chinese) "中文" else "Chinese",
+                    color = LocalCustomColor.current.textColor
+                )
+            }
+            Button(onClick = { changeLanguage(Language.English) }) {
+                Text(
+                    text = if (LocalLanguage.current == Language.Chinese) "英文" else "English",
+                    color = LocalCustomColor.current.textColor
+                )
             }
         }
     }

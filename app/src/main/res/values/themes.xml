@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Compose_demo" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Compose_demo" parent="android:Theme.Material.Light.NoActionBar" >>
+<!--        <item name="android:windowBackground">@android:color/transparent</item> &lt;!&ndash; 背景色透明 &ndash;&gt;-->
+<!--        <item name="android:windowIsTranslucent">true</item> &lt;!&ndash; 是否有透明属性 &ndash;&gt;-->
+<!--        <item name="android:windowBackgroundBlurRadius" tools:ignore="NewApi">30dp</item>-->
+    </style>>
 </resources>

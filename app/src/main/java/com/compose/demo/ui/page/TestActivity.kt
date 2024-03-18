@@ -56,6 +56,7 @@ class TestActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = NavTag.NavPage.name) {
@@ -174,6 +175,7 @@ class TestActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 fun NavPage(navTo: (tag: String) -> Unit) {

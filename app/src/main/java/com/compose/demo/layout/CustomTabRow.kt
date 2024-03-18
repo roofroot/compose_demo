@@ -14,17 +14,20 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyListItemInfo
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onPlaced
@@ -52,7 +55,8 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun <T> CustomTabRow(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.wrapContentSize(),
+    tabRowModifier: Modifier = Modifier,
     selectedIndex: MutableState<Int>,
     data: List<T>,
     indicatorContent: @Composable () -> Unit,
@@ -65,11 +69,9 @@ fun <T> CustomTabRow(
     tabContent: @Composable (item: T, index: Int, selected: Boolean) -> Unit
 ) {
     val contentSize = remember {
-        mutableStateOf(IntSize(0, 0))
+        mutableStateMapOf<Int, IntSize>()
     }
-    val rellyContentSize = remember {
-        mutableStateOf(IntSize(0, 0))
-    }
+
     val indicatorOffsetX = remember {
         mutableStateOf(0)
     }
@@ -81,14 +83,16 @@ fun <T> CustomTabRow(
     val animIndicatorOffsetX =
         animateIntAsState(targetValue = indicatorOffsetX.value)
     if (listState.isScrollInProgress) {
-        if (listState.firstVisibleItemIndex <= selectedIndex.value && selectedIndex.value <=
-            listState.firstVisibleItemIndex + listState.layoutInfo.viewportSize.width / contentSize.value.width
+        if (selectedIndex.value - listState.firstVisibleItemIndex > 0 && selectedIndex.value - listState.firstVisibleItemIndex
+            < listState.layoutInfo.visibleItemsInfo.size - 1
         ) {
             indicatorOffsetX.value =
                 listState.layoutInfo.visibleItemsInfo.get(selectedIndex.value - listState.firstVisibleItemIndex).offset
         } else {
             if (indicatorOffsetX.value < listState.firstVisibleItemIndex) {
-                indicatorOffsetX.value = -contentSize.value.width
+
+                indicatorOffsetX.value = -(contentSize[selectedIndex.value]?.width?.toInt() ?: 0)
+
             } else {
                 indicatorOffsetX.value = listState.layoutInfo.viewportSize.width
             }
@@ -96,15 +100,14 @@ fun <T> CustomTabRow(
     }
     Box(
         modifier
-            .wrapContentSize()
             .onPlaced {
                 layoutSize.value = it.size
             }) {
         if (!frontIndicator) {
             Box(
                 Modifier
-                    .width((contentSize.value.width / LocalDensity.current.density).dp)
-                    .height((contentSize.value.height / LocalDensity.current.density).dp)
+                    .width(((contentSize[selectedIndex.value]?.width?:100) / LocalDensity.current.density).dp)
+                    .height(((contentSize[selectedIndex.value]?.height?:100) / LocalDensity.current.density).dp)
                     .offset {
                         IntOffset(
                             if (listState.isScrollInProgress) indicatorOffsetX.value else animIndicatorOffsetX.value,
@@ -119,35 +122,26 @@ fun <T> CustomTabRow(
         val scope = rememberCoroutineScope()
 
         LazyRow(
-            Modifier
-                .fillMaxSize()
+            tabRowModifier
                 .onPlaced {
                     if (listState.firstVisibleItemIndex == 0 && selectedIndex.value == 0) {
                         indicatorOffsetX.value =
-                            listState.layoutInfo.visibleItemsInfo.get(selectedIndex.value - listState.firstVisibleItemIndex).offset
+                            listState.layoutInfo.visibleItemsInfo[selectedIndex.value - listState.firstVisibleItemIndex].offset
                     }
                 },
             horizontalArrangement = horizontalArrangement,
             state = listState,
             content = {
-                var modifier = Modifier
-                    .onPlaced {
-                        contentSize.value = it.size
-                    }
+                var modifier = Modifier.wrapContentHeight()
 
                 if (autoFixedContent) {
                     if (placeCount == -1) {
                         modifier = modifier
-                            .onPlaced {
-                                contentSize.value = it.size
-                            }
+
                             .width(((layoutSize.value.width / data.count()) / density).dp)
                             .wrapContentHeight()
                     } else {
                         modifier = modifier
-                            .onPlaced {
-                                contentSize.value = it.size
-                            }
                             .width(((layoutSize.value.width / placeCount) / density).dp)
                             .wrapContentHeight()
                     }
@@ -157,6 +151,9 @@ fun <T> CustomTabRow(
                 itemsIndexed(data) { index, item ->
                     Box(
                         modifier
+                            .onPlaced {
+                                contentSize.put(index, it.size)
+                            }
                             .pointerInput(Unit) {
                                 detectTapGestures(onTap = {
                                     selectedIndex.value = index
@@ -168,7 +165,7 @@ fun <T> CustomTabRow(
                                         scope.launch {
                                             listState.animateScrollToItem(
                                                 selectedIndex.value,
-                                                -listState.layoutInfo.viewportSize.width / 2 + contentSize.value.width / 2
+                                                -listState.layoutInfo.viewportSize.width / 2 + (contentSize[selectedIndex.value]?.width?:100) / 2
                                             )
                                             indicatorOffsetX.value =
                                                 listState.layoutInfo.visibleItemsInfo.get(
@@ -199,8 +196,8 @@ fun <T> CustomTabRow(
         if (frontIndicator) {
             Box(
                 Modifier
-                    .width((contentSize.value.width / LocalDensity.current.density).dp)
-                    .height((contentSize.value.height / LocalDensity.current.density).dp)
+                    .width(((contentSize[selectedIndex.value]?.width?:100) / LocalDensity.current.density).dp)
+                    .height(((contentSize[selectedIndex.value]?.height?:100) / LocalDensity.current.density).dp)
                     .offset {
                         IntOffset(
                             if (listState.isScrollInProgress) indicatorOffsetX.value else animIndicatorOffsetX.value,

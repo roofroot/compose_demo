@@ -167,7 +167,15 @@ fun CalenderView(
                             CalenderUtil.getLastMonthDay(time, i), dayStr = i.toString()
                         ) {
                             if (index == pagerState.currentPage) {
-                                onDisableDayClick(it, monthTime, selectTime)
+                                if (it < monthTime.value) {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                    }
+                                } else if (it > monthTime.value) {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                    }
+                                }
                             }
                         }
                         count++
@@ -192,7 +200,15 @@ fun CalenderView(
                             CalenderUtil.getNextMonthDay(time, i), dayStr = i.toString()
                         ) {
                             if (index == pagerState.currentPage) {
-                                onDisableDayClick(it, monthTime, selectTime)
+                                if (it < monthTime.value) {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                    }
+                                } else if (it > monthTime.value) {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                    }
+                                }
                             }
                         }
                     }
@@ -230,15 +246,6 @@ fun CalenderView(
     }
 }
 
-private fun onDisableDayClick(
-    time: Long, monthTime: MutableState<Long>, selectTime: MutableList<Long>
-) {
-    if (time < monthTime.value) {
-        monthTime.value = CalenderUtil.getLastMonth(monthTime.value)
-    } else if (time > monthTime.value) {
-        monthTime.value = CalenderUtil.getNextMonth(monthTime.value)
-    }
-}
 
 var olderPagerIndex = -1
 

@@ -27,6 +27,7 @@ import com.compose.demo.theme.customSystem3
 enum class CustomNavTag {
     PageOne, PageTwo
 }
+
 @Composable
 fun TestPageOne(
     navTo: (tag: String, bundle: Bundle?) -> Unit,
@@ -82,7 +83,7 @@ fun TestPageTwo(
 @Composable
 fun SimpleNav() {
     val navController = rememberNavController()
-    TestTheme { onThemeChange ->
+    TestTheme { themeChange, languageChange ->
         NavHost(navController = navController, startDestination = CustomNavTag.PageOne.name) {
             composable(CustomNavTag.PageOne.name) {
                 MyNavigation2(controller = navController) { navTo, navPopupTo, popBack ->

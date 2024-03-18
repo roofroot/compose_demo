@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -125,5 +126,72 @@ class ScrollBarState {
 fun Modifier.itemScrollBar(index: Int, scrollBarState: ScrollBarState): Modifier {
     return onPlaced {
         scrollBarState.childRectMap.put(index, it.boundsInParent())
+    }
+}
+
+@Composable
+fun Modifier.gridScrollbar(
+    state: LazyGridState,
+    knobCornerRadius: Dp = 4.dp,
+    knobColor: Color = Color(0xFF86776C),
+    visibleAlpha: Float = 1f,
+    hiddenAlpha: Float = 0f,
+    cols: Int = 2,
+    fadeInAnimationDurationMs: Int = 150,
+    fadeOutAnimationDurationMs: Int = 500,
+    fadeOutAnimationDelayMs: Int = 4000,
+    scrollBarWidth: Dp = 5.dp,
+    scrollBarHeight: Dp = 115.dp,
+): Modifier {
+
+    val targetAlpha =
+        if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward)) {
+            visibleAlpha
+        } else {
+            hiddenAlpha
+        }
+    val animationDurationMs =
+        if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward)) {
+            fadeInAnimationDurationMs
+        } else {
+            fadeOutAnimationDurationMs
+        }
+    val animationDelayMs =
+        if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward)) {
+            0
+        } else {
+            fadeOutAnimationDelayMs
+        }
+    val alpha by
+    animateFloatAsState(
+        targetValue = targetAlpha,
+        animationSpec =
+        tween(delayMillis = animationDelayMs, durationMillis = animationDurationMs)
+    )
+    return drawWithContent {
+        drawContent()
+        var totalHeight =
+            (state.layoutInfo.totalItemsCount / cols + if (state.layoutInfo.totalItemsCount % cols == 0) 0 else 1) * state.layoutInfo.visibleItemsInfo.first().size.height.toFloat()
+        val offsetHeight =
+            (state.firstVisibleItemScrollOffset + state.firstVisibleItemIndex / cols * state.layoutInfo.visibleItemsInfo.first().size.height).toFloat()
+
+        val a = state.layoutInfo.viewportSize.height - scrollBarHeight.toPx()
+
+        var x = a / (totalHeight - state.layoutInfo.viewportSize.height)
+
+        val offsetY =
+            if (offsetHeight > 0) (offsetHeight * x) else 0f
+        // Draw the knob
+        drawRoundRect(
+            color = knobColor,
+            topLeft = Offset(size.width - 10f, offsetY),
+            size =
+            Size(scrollBarWidth.toPx(), scrollBarHeight.toPx()),
+            alpha = alpha,
+            cornerRadius = CornerRadius(
+                x = knobCornerRadius.toPx(),
+                y = knobCornerRadius.toPx()
+            ),
+        )
     }
 }

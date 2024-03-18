@@ -21,13 +21,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.compose.demo.layout.CustomTabRow
+import kotlin.random.Random
 
 @Composable
 fun SimpleCustomTabRow() {
     val list = ArrayList<String>()
-    for (i in 0..5) {
-        list.add("item ${i}")
-    }
+//    for (i in 0..5) {
+//        list.add("item ${i} ${Random.nextInt(100000)/i}")
+//    }
+    list.add("fasfdsafsadfaf")
+    list.add("dfsfsdf")
+    list.add("dsfd")
     val selectedIndex = remember {
         mutableStateOf(0)
     }
@@ -43,27 +47,29 @@ fun SimpleCustomTabRow() {
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
     ) {
         CustomTabRow(
-            modifier = Modifier
+            modifier= Modifier.padding(start = 100.dp, end = 100.dp),
+            tabRowModifier = Modifier
                 .background(Color.Gray, RoundedCornerShape(25.dp))
-                .fillMaxWidth()
                 .height(50.dp),
             selectedIndex = selectedIndex,
-            frontIndicator = false,
+            frontIndicator = true,
             data = list,
             indicatorContent = {
                 Box(
                     Modifier
                         .background(Color.Blue, RoundedCornerShape(25.dp))
-                        .width(80.dp)
-                        .height(40.dp)
+                        .fillMaxWidth()
+                        .height(5.dp)
                 ) {
 
                 }
-            }, indicatorAlignment = Alignment.Center
+            },
+            indicatorAlignment = Alignment.BottomCenter,
+            horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start)
         ) { item: String, index: Int, selected: Boolean ->
             Box(
                 modifier = Modifier
-                    .width(100.dp)
+                    .wrapContentWidth()
                     .height(50.dp),
                 contentAlignment = Alignment.Center
             ) {

@@ -62,6 +62,15 @@ data class CustomOption(
     val colorBlend: Int = Color.White.toArgb()
 )
 
+/**
+ *
+ * @receiver Modifier
+ * @param key String 多个控件需要渲染毛玻璃效果时用于区分
+ * @param state BlurState
+ * @param option CustomOption? 自定义的参数
+ * @return Modifier
+ */
+
 @RequiresApi(Build.VERSION_CODES.S)
 fun Modifier.customChildBlur(
     key: String, state: BlurState, option: CustomOption? = null
