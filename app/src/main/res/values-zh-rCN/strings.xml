@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">compose_demo</string>
+    <!--CalendarView-->
+    <string name="calendar_January" translatable="false">一月</string>
+    <string name="calendar_February" translatable="false">二月</string>
+    <string name="calendar_March" translatable="false">三月</string>
+    <string name="calendar_April" translatable="false">四月</string>
+    <string name="calendar_May" translatable="false">五月</string>
+    <string name="calendar_June" translatable="false">六月</string>
+    <string name="calendar_July" translatable="false">七月</string>
+    <string name="calendar_August" translatable="false">八月</string>
+    <string name="calendar_September" translatable="false">九月</string>
+    <string name="calendar_October" translatable="false">十月</string>
+    <string name="calendar_November" translatable="false">十一月</string>
+    <string name="calendar_December" translatable="false">十二月</string>
+
+    <string name="calendar_SUN" translatable="false">日</string>
+    <string name="calendar_MON" translatable="false">一</string>
+    <string name="calendar_TUE" translatable="false">二</string>
+    <string name="calendar_WED" translatable="false">三</string>
+    <string name="calendar_THU" translatable="false">四</string>
+    <string name="calendar_FRI" translatable="false">五</string>
+    <string name="calendar_SAT" translatable="false">六</string>
+</resources>
