@@ -25,7 +25,6 @@ import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.zIndex
-import com.compose.demo.widget.gridScrollbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -271,7 +270,7 @@ fun <T> DraggableInsertLazyGrid(
     }
 
     LazyVerticalGrid(
-        modifier = modifier.gridScrollbar(scrollstate, cols = 6)
+        modifier = modifier
             .onPlaced {
                 layoutSize.value = it.size
             }

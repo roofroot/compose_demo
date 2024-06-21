@@ -1,20 +1,11 @@
 package com.compose.demo.ui.page
 
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.webkit.WebView
-import android.widget.ImageView
-import android.widget.VideoView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,33 +13,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.LinearGradient
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import coil.ImageLoader
-import coil.request.CachePolicy
-import coil.request.ImageRequest
-import com.compose.demo.R
-import com.compose.demo.layout.PanelLayout
 import com.compose.demo.nav.MyNavigation
 import com.compose.demo.shape.WaveBorderShape
 import com.compose.demo.ui.theme.black
@@ -56,14 +31,8 @@ import com.compose.demo.ui.theme.lavender
 import com.compose.demo.ui.theme.mediumturquoise
 import com.compose.demo.ui.theme.pink
 import com.compose.demo.ui.theme.plum
-import com.compose.demo.widget.CustomOption
 import com.compose.demo.widget.GradientText
-import com.compose.demo.widget.customChildBlur
-import com.compose.demo.widget.customParentBlur
-import com.compose.demo.widget.getBlurState
 import com.desaysv.hmicomponents.compose.SimpleDraggableInsertLazyList
-import com.desaysv.hmicomponents.compose.SimpleDraggableInsertModifier
-import com.google.accompanist.coil.rememberCoilPainter
 
 enum class NavTag {
     NavPage, SimpleScrollView, SimpleCirculatePager,
@@ -74,7 +43,6 @@ enum class NavTag {
 }
 
 class TestActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -190,7 +158,6 @@ class TestActivity : ComponentActivity() {
                         SimpleBlurModifier()
                     }
                 }
-
 
             }
 

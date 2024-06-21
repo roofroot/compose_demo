@@ -6,9 +6,7 @@ import android.graphics.Matrix
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
@@ -17,16 +15,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asComposeRenderEffect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onPlaced
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.LayoutDirection
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -71,7 +64,6 @@ data class CustomOption(
  * @return Modifier
  */
 
-@RequiresApi(Build.VERSION_CODES.S)
 fun Modifier.customChildBlur(
     key: String, state: BlurState, option: CustomOption? = null
 ): Modifier {

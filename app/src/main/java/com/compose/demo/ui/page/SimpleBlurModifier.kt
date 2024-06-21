@@ -22,14 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.compose.demo.R
-import com.compose.demo.shape.pentagramShape
 import com.compose.demo.widget.CustomOption
 import com.compose.demo.widget.customChildBlur
 import com.compose.demo.widget.customParentBlur
@@ -38,7 +36,6 @@ import com.compose.demo.widget.getPentagramShapePath
 import com.google.accompanist.coil.rememberCoilPainter
 
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun SimpleBlurModifier() {
 

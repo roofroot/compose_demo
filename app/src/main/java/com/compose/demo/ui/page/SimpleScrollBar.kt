@@ -1,13 +1,5 @@
 package com.compose.demo.ui.page
 
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
-import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -31,9 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.compose.demo.R
+import com.compose.demo.widget.SimpleScrollBar
+import com.compose.demo.widget.columnScrollbar
+import com.compose.demo.widget.columnScrollbarView
 import com.compose.demo.widget.getScrollBarState
 import com.compose.demo.widget.itemScrollBar
-import com.compose.demo.widget.scrollbar
 import com.google.accompanist.coil.rememberCoilPainter
 
 
@@ -67,35 +60,47 @@ fun SimpleScrollBar() {
 private fun list(data: List<MyListData>) {
     val state = rememberLazyListState()
     val scrollBarState = getScrollBarState()
-    LazyColumn(
-        modifier = Modifier
-            .scrollbar(state = state, scrollBarState = scrollBarState)
-            .fillMaxSize(), state = state
-    ) {
-        itemsIndexed(data) { index: Int, item: MyListData ->
-            val painter = rememberCoilPainter(request = item.iconRes)
-            Row(
-                Modifier
-                    .itemScrollBar(index, scrollBarState)
-                    .fillMaxWidth()
-                    .padding(10.dp)
-                    .height(100.dp)
-                    .background(color = item.color),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(150.dp),
-                    painter = painter,
-                    contentScale = ContentScale.FillBounds,
-                    contentDescription = ""
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier
+                .columnScrollbar(
+                    state = state,
+                    scrollBarState = scrollBarState,
+                    isDrawScrollBar = false
                 )
+                .fillMaxSize(), state = state
+        ) {
+            itemsIndexed(data) { index: Int, item: MyListData ->
+                val painter = rememberCoilPainter(request = item.iconRes)
+                Row(
+                    Modifier
+                        .itemScrollBar(index, scrollBarState)
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .height(100.dp)
+                        .background(color = item.color),
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(150.dp),
+                        painter = painter,
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = ""
+                    )
 
-                Text(text = item.number)
+                    Text(text = item.number)
+                }
             }
         }
+        SimpleScrollBar(
+            modifier = Modifier.columnScrollbarView(
+                state = state,
+                scrollBarState = scrollBarState
+            ), isDragging = scrollBarState.isDragging.value
+        )
     }
 
 }
