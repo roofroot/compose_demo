@@ -11,82 +11,59 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.boundsInParent
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 @Composable
-fun Modifier.columnScrollbar(
+fun Modifier.LazyColumnSameItemScrollbar(
     state: LazyListState,
+    scrollBarState: SimpleScrollBarState,
     visibleAlpha: Float = 1f,
     hiddenAlpha: Float = 0f,
-    scrollBarState: ScrollBarState,
+    footerHeight: Dp = 0.dp,
+    footerCount: Int = 0,
     scrollBarHeight: Dp = 115.dp,
     fadeOutEdge: Boolean = false,
-    fadeEdgeTop: Dp = 10.dp,
+    fadeEdgeTop: Dp = 30.dp,
     fadeEdgeBottom: Dp = 30.dp,
 ): Modifier {
-    LaunchedEffect(Unit) {
-        val firstItem = state.firstVisibleItemIndex
-        val firstItemOffset = state.firstVisibleItemScrollOffset
-        state.scrollToItem(index = state.layoutInfo.totalItemsCount - 1)
-        state.scrollToItem(0)
-        state.scrollToItem(firstItem, firstItemOffset)
-    }
+
     scrollBarState.alpha.value =
         if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward) || scrollBarState.isDragging.value) {
             visibleAlpha
         } else {
             hiddenAlpha
         }
-
     return alpha(if (fadeOutEdge) 0.99f else 1f).drawWithContent {
         drawContent()
-        var totalHeight = 0f
-        var offsetOne = 0f
-        var offsetIndex = 0
-        var offsetHeight = 0f
-        scrollBarState.childRectMap.toList().forEach {
-            val rect = it.second
-            if (it.first >= offsetIndex && rect.top < 0
-                && it.first < state.firstVisibleItemIndex + state.layoutInfo.visibleItemsInfo.size
-            ) {
-                offsetOne = -rect.top
-                offsetIndex = it.first
-            }
-            totalHeight += rect.height
-        }
-        scrollBarState.childRectMap.forEach { (i, rect) ->
-            if (i < offsetIndex) {
-                offsetHeight += rect.height
-            }
-        }
-        offsetHeight += offsetOne
+        val count = state.layoutInfo.totalItemsCount - footerCount
+        val itemHeight = state.layoutInfo.visibleItemsInfo.first().size
 
-        val a = size.height - scrollBarHeight.toPx()
+        var totalHeight =
+            count * itemHeight + footerHeight.toPx()
+        val offsetHeight =
+            (state.firstVisibleItemScrollOffset + state.firstVisibleItemIndex * itemHeight).toFloat()
 
-        var x = a / (totalHeight - size.height)
+        val a = state.layoutInfo.viewportSize.height - scrollBarHeight.toPx()
+
+        var x = a / (totalHeight - state.layoutInfo.viewportSize.height)
 
         val offsetY =
             if (offsetHeight > 0) (offsetHeight * x) else 0f
+        if (scrollBarState.isDragging.value == false) {
+            scrollBarState.offsetY.value = offsetY
+        }
         if (fadeOutEdge) {
             val top = fadeEdgeTop.toPx() / (state.layoutInfo.viewportSize.height)
             val bottom = fadeEdgeBottom.toPx() / (state.layoutInfo.viewportSize.height)
@@ -102,23 +79,23 @@ fun Modifier.columnScrollbar(
                 ), blendMode = BlendMode.DstIn
             )
         }
-        if (scrollBarState.isDragging.value == false) {
-            scrollBarState.offsetY.value = offsetY
-        }
     }
 }
 
 @SuppressLint("ModifierFactoryUnreferencedReceiver")
 @Composable
-fun Modifier.columnScrollbarView(
+fun Modifier.LazyColumnSameItemScrollbarView(
     state: LazyListState,
+    footerCount: Int = 0,
+    footerHeight: Dp = 0.dp,
     fadeInAnimationDurationMs: Int = 150,
     fadeOutAnimationDurationMs: Int = 500,
     fadeOutAnimationDelayMs: Int = 4000,
-    scrollBarState: ScrollBarState,
-    scrollBarHeight: Dp=115.dp,
+    scrollBarState: SimpleScrollBarState,
+    scrollBarHeight: Dp = 115.dp,
 ): Modifier {
 
+    val density = LocalDensity.current.density
     val animationDurationMs =
         if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward)) {
             fadeInAnimationDurationMs
@@ -131,7 +108,6 @@ fun Modifier.columnScrollbarView(
         } else {
             fadeOutAnimationDelayMs
         }
-    val density = LocalDensity.current.density
     val alpha by
     animateFloatAsState(
         targetValue = scrollBarState.alpha.value,
@@ -141,33 +117,18 @@ fun Modifier.columnScrollbarView(
 
     val scope = rememberCoroutineScope()
     val draggableState = rememberDraggableState { delta ->
-        var totalHeight = 0f
-        var offsetOne = 0f
-        var offsetIndex = 0
-        var offsetHeight = 0f
-        scrollBarState.childRectMap
-            .toList()
-            .forEach {
-                val rect = it.second
-                if (it.first >= offsetIndex && rect.top < 0
-                    && it.first < state.firstVisibleItemIndex + state.layoutInfo.visibleItemsInfo.size
-                ) {
-                    offsetOne = -rect.top
-                    offsetIndex = it.first
-                }
-                totalHeight += rect.height
-            }
-        scrollBarState.childRectMap.forEach { (i, rect) ->
-            if (i < offsetIndex) {
-                offsetHeight += rect.height
-            }
-        }
-        offsetHeight += offsetOne
+        val count = state.layoutInfo.totalItemsCount - footerCount
+        val itemHeight = state.layoutInfo.visibleItemsInfo.first().size
+
+        var totalHeight =
+            count * itemHeight + footerHeight.value * density
+        val offsetHeight =
+            (state.firstVisibleItemScrollOffset + state.firstVisibleItemIndex * itemHeight).toFloat()
 
         val a = state.layoutInfo.viewportSize.height - scrollBarHeight.value * density
 
         var x = a / (totalHeight - state.layoutInfo.viewportSize.height)
-
+        //用这个值除以控件总高度减去视口的高度， 就可以得到我们窗口实际滚动的距离与进度条实际可以滚动的范围的一个比例
         if (state.canScrollForward && delta > 0 || state.canScrollBackward && delta < 0) {
             if (scrollBarState.offsetY.value + delta < 0) {
                 scrollBarState.offsetY.value = 0f
@@ -195,38 +156,4 @@ fun Modifier.columnScrollbarView(
             scrollBarState.isDragging.value = false
         })
         .alpha(alpha)
-}
-
-@Composable
-fun Modifier.itemScrollBar(index: Int, scrollBarState: ScrollBarState): Modifier {
-    return onPlaced {
-        scrollBarState.childRectMap.put(index, it.boundsInParent())
-    }
-}
-
-@Composable
-fun getScrollBarState(): ScrollBarState {
-    val scrollBarState = remember {
-        mutableStateOf(ScrollBarState())
-    }
-    scrollBarState.value.childRectMap = remember {
-        mutableStateMapOf()
-    }
-    scrollBarState.value.offsetY = remember {
-        mutableStateOf(0f)
-    }
-    scrollBarState.value.isDragging = remember {
-        mutableStateOf(false)
-    }
-    scrollBarState.value.alpha = remember {
-        mutableStateOf(0f)
-    }
-    return scrollBarState.value
-}
-
-class ScrollBarState {
-    lateinit var childRectMap: MutableMap<Int, Rect>
-    lateinit var offsetY: MutableState<Float>
-    lateinit var isDragging: MutableState<Boolean>
-    lateinit var alpha: MutableState<Float>
 }

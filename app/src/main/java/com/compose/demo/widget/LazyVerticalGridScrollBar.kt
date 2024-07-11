@@ -16,9 +16,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -32,49 +29,23 @@ import kotlinx.coroutines.launch
 fun Modifier.gridScrollbar(
     state: LazyGridState,
     scrollBarState: SimpleScrollBarState,
-    knobCornerRadius: Dp = 4.dp,
-    scrollBarMarginRight: Dp = 20.dp,
-    knobColor: Color = Color.Gray,
     visibleAlpha: Float = 1f,
     hiddenAlpha: Float = 0f,
     cols: Int = 2,
     footerHeight: Dp = 0.dp,
     footerCount: Int = 0,
-    fadeInAnimationDurationMs: Int = 150,
-    fadeOutAnimationDurationMs: Int = 500,
-    fadeOutAnimationDelayMs: Int = 4000,
-    scrollBarWidth: Dp = 5.dp,
     scrollBarHeight: Dp = 115.dp,
     fadeOutEdge: Boolean = false,
     fadeEdgeTop: Dp = 30.dp,
     fadeEdgeBottom: Dp = 30.dp,
-    isDrawScrollBar: Boolean = false,
 ): Modifier {
 
     scrollBarState.alpha.value =
-        if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward)||scrollBarState.isDragging.value) {
+        if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward) || scrollBarState.isDragging.value) {
             visibleAlpha
         } else {
             hiddenAlpha
         }
-    val animationDurationMs =
-        if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward)) {
-            fadeInAnimationDurationMs
-        } else {
-            fadeOutAnimationDurationMs
-        }
-    val animationDelayMs =
-        if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward)) {
-            0
-        } else {
-            fadeOutAnimationDelayMs
-        }
-    val alpha by
-    animateFloatAsState(
-        targetValue = scrollBarState.alpha.value,
-        animationSpec =
-        tween(delayMillis = animationDelayMs, durationMillis = animationDurationMs)
-    )
     return alpha(if (fadeOutEdge) 0.99f else 1f).drawWithContent {
         drawContent()
         val count = state.layoutInfo.totalItemsCount - footerCount
@@ -107,23 +78,6 @@ fun Modifier.gridScrollbar(
                     startY = 0f,
                     endY = state.layoutInfo.viewportSize.height.toFloat()
                 ), blendMode = BlendMode.DstIn
-            )
-        }
-        if (isDrawScrollBar) {
-            // Draw the knob
-            drawRoundRect(
-                color = knobColor,
-                topLeft = Offset(
-                    size.width - scrollBarWidth.toPx() - scrollBarMarginRight.toPx(),
-                    offsetY
-                ),
-                size =
-                Size(scrollBarWidth.toPx(), scrollBarHeight.toPx()),
-                alpha = alpha,
-                cornerRadius = CornerRadius(
-                    x = knobCornerRadius.toPx(),
-                    y = knobCornerRadius.toPx()
-                ),
             )
         }
     }

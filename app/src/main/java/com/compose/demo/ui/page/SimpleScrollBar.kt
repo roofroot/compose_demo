@@ -22,11 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.compose.demo.R
+import com.compose.demo.widget.LazyColumnSameItemScrollbar
+import com.compose.demo.widget.LazyColumnSameItemScrollbarView
 import com.compose.demo.widget.SimpleScrollBar
-import com.compose.demo.widget.columnScrollbar
-import com.compose.demo.widget.columnScrollbarView
-import com.compose.demo.widget.getScrollBarState
-import com.compose.demo.widget.itemScrollBar
+import com.compose.demo.widget.getSimpleScrollBarState
 import com.google.accompanist.coil.rememberCoilPainter
 
 
@@ -59,14 +58,13 @@ fun SimpleScrollBar() {
 @Composable
 private fun list(data: List<MyListData>) {
     val state = rememberLazyListState()
-    val scrollBarState = getScrollBarState()
+    val scrollBarState = getSimpleScrollBarState()
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier
-                .columnScrollbar(
+                .LazyColumnSameItemScrollbar(
                     state = state,
                     scrollBarState = scrollBarState,
-                    isDrawScrollBar = false
                 )
                 .fillMaxSize(), state = state
         ) {
@@ -74,7 +72,6 @@ private fun list(data: List<MyListData>) {
                 val painter = rememberCoilPainter(request = item.iconRes)
                 Row(
                     Modifier
-                        .itemScrollBar(index, scrollBarState)
                         .fillMaxWidth()
                         .padding(10.dp)
                         .height(100.dp)
@@ -96,9 +93,10 @@ private fun list(data: List<MyListData>) {
             }
         }
         SimpleScrollBar(
-            modifier = Modifier.columnScrollbarView(
+            modifier = Modifier.LazyColumnSameItemScrollbarView(
                 state = state,
-                scrollBarState = scrollBarState
+                scrollBarState = scrollBarState,
+                scrollBarHeight = 115.dp
             ), isDragging = scrollBarState.isDragging.value
         )
     }

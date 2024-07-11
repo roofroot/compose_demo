@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.compose.demo.R
@@ -36,6 +35,7 @@ import com.compose.demo.widget.getPentagramShapePath
 import com.google.accompanist.coil.rememberCoilPainter
 
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun SimpleBlurModifier() {
 
@@ -90,33 +90,33 @@ fun SimpleBlurModifier() {
                 }
             }
         }
-        Box(
-            modifier = Modifier
-                .padding(10.dp)
-                .customChildBlur(
-                    "text1",
-                    state,
-                    CustomOption(
-                        rectRadiusX = 0.02f,
-                        rectRadiusY = 0.1f,
-                        colorBlend = Color.Black.toArgb()
-                    )
-                )
-                .align(Alignment.CenterStart)
-                .width(500.dp)
-                .height(100.dp)
-        )
-        Box(
-            modifier = Modifier
-                .padding(10.dp)
-                .customChildBlur(
-                    "text2",
-                    state,
-                    CustomOption(shapeType = 1)
-                )
-                .align(Alignment.TopStart)
-                .size(100.dp)
-        )
+//        Box(
+//            modifier = Modifier
+//                .padding(10.dp)
+//                .customChildBlur(
+//                    "text1",
+//                    state,
+//                    CustomOption(
+//                        rectRadiusX = 0.02f,
+//                        rectRadiusY = 0.1f,
+//                        colorBlend = Color.Black.toArgb()
+//                    )
+//                )
+//                .align(Alignment.CenterStart)
+//                .width(500.dp)
+//                .height(100.dp)
+//        )
+//        Box(
+//            modifier = Modifier
+//                .padding(10.dp)
+//                .customChildBlur(
+//                    "text2",
+//                    state,
+//                    CustomOption(shapeType = 1)
+//                )
+//                .align(Alignment.TopStart)
+//                .size(100.dp)
+//        )
 
         Box(
             modifier = Modifier
