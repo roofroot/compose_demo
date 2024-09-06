@@ -13,10 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +29,6 @@ import com.compose.demo.layout.CirculatePager
 import com.compose.demo.layout.OffsetPagerIndicator
 import com.compose.demo.layout.SelectPagerIndicator
 import com.compose.demo.layout.getCirclePagerState
-
 import com.google.accompanist.coil.rememberCoilPainter
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -46,14 +42,11 @@ fun SimpleCirculatePager() {
         R.mipmap.img_4,
         R.mipmap.img_5
     )
-    val autoScroll = remember {
-        mutableStateOf(false)
-    }
     val pagerState = getCirclePagerState()
     Box(modifier = Modifier.fillMaxSize()) {
         CirculatePager(
             data = list,
-            autoScrollState = autoScroll,
+            autoScrollState = true,
             pagerState = pagerState
         ) { item, pos ->
             val coilPainter = rememberCoilPainter(request = item)
@@ -138,10 +131,6 @@ fun SimpleCirculatePager() {
                 ) {
 
                 }
-            }
-
-            Button(onClick = { autoScroll.value = !autoScroll.value }) {
-                Text(text = "自动滚动开关")
             }
         }
     }

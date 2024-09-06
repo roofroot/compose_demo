@@ -47,7 +47,6 @@ class TestActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
-
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = NavTag.NavPage.name) {
                 composable(NavTag.NavPage.name) {
