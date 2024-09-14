@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.compose.demo.layout.GridLayout
 
 @Composable
-fun SimpleGridView() {
+fun SampleGridView() {
     GridLayout(modifier = Modifier.size(500.dp), columns = 5, rows = 5, fixed = 0) {
         repeat(25) {
             Box(Modifier.background(getRandomColor())) {

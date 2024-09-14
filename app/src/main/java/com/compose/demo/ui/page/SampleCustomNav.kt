@@ -1,9 +1,7 @@
 package com.compose.demo.ui.page
 
 import android.os.Bundle
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -14,15 +12,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.compose.demo.nav.MyNavigation
 import com.compose.demo.nav.MyNavigation2
 import com.compose.demo.nav.NavExtrasKey
-import com.compose.demo.theme.CustomSystem
-import com.compose.demo.theme.LocalCustomColor
 import com.compose.demo.theme.TestTheme
-import com.compose.demo.theme.customSystem1
-import com.compose.demo.theme.customSystem2
-import com.compose.demo.theme.customSystem3
 
 enum class CustomNavTag {
     PageOne, PageTwo
@@ -81,7 +73,7 @@ fun TestPageTwo(
 }
 
 @Composable
-fun SimpleNav() {
+fun SampleNav() {
     val navController = rememberNavController()
     TestTheme { themeChange, languageChange ->
         NavHost(navController = navController, startDestination = CustomNavTag.PageOne.name) {

@@ -43,13 +43,16 @@ fun Modifier.columnScrollbar(
     fadeOutEdge: Boolean = false,
     fadeEdgeTop: Dp = 10.dp,
     fadeEdgeBottom: Dp = 30.dp,
+    spaceHeight: Dp = 0.dp
 ): Modifier {
     LaunchedEffect(Unit) {
         val firstItem = state.firstVisibleItemIndex
         val firstItemOffset = state.firstVisibleItemScrollOffset
-        state.scrollToItem(index = state.layoutInfo.totalItemsCount - 1)
-        state.scrollToItem(0)
-        state.scrollToItem(firstItem, firstItemOffset)
+        if (state.layoutInfo.totalItemsCount > 1) {
+            state.scrollToItem(index = state.layoutInfo.totalItemsCount - 1)
+            state.scrollToItem(0)
+            state.scrollToItem(firstItem, firstItemOffset)
+        }
     }
     scrollBarState.alpha.value =
         if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward) || scrollBarState.isDragging.value) {
@@ -72,11 +75,11 @@ fun Modifier.columnScrollbar(
                 offsetOne = -rect.top
                 offsetIndex = it.first
             }
-            totalHeight += rect.height
+            totalHeight += rect.height + (if (totalHeight != 0f) spaceHeight.toPx() else 0f)
         }
         scrollBarState.childRectMap.forEach { (i, rect) ->
             if (i < offsetIndex) {
-                offsetHeight += rect.height
+                offsetHeight += rect.height + (if (offsetHeight != 0f) spaceHeight.toPx() else 0f)
             }
         }
         offsetHeight += offsetOne
@@ -116,7 +119,8 @@ fun Modifier.columnScrollbarView(
     fadeOutAnimationDurationMs: Int = 500,
     fadeOutAnimationDelayMs: Int = 4000,
     scrollBarState: ScrollBarState,
-    scrollBarHeight: Dp=115.dp,
+    scrollBarHeight: Dp = 115.dp,
+    spaceHeight: Dp = 0.dp
 ): Modifier {
 
     val animationDurationMs =
@@ -155,14 +159,14 @@ fun Modifier.columnScrollbarView(
                     offsetOne = -rect.top
                     offsetIndex = it.first
                 }
-                totalHeight += rect.height
+                totalHeight += rect.height + (if (totalHeight != 0f) spaceHeight.value * density else 0f)
             }
         scrollBarState.childRectMap.forEach { (i, rect) ->
             if (i < offsetIndex) {
-                offsetHeight += rect.height
+                offsetHeight += rect.height + (if (offsetHeight != 0f) spaceHeight.value * density else 0f)
             }
         }
-        offsetHeight += offsetOne
+        offsetHeight += offsetOne + spaceHeight.value * density
 
         val a = state.layoutInfo.viewportSize.height - scrollBarHeight.value * density
 

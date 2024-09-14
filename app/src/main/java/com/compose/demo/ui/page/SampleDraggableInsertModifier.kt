@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import com.compose.demo.R
 import com.compose.demo.ui.page.MyListData
 import com.compose.demo.ui.page.getRandomColor
-import com.desaysv.hmicomponents.compose_lib.layout.DraggableInsertLazyColumn
 import com.desaysv.hmicomponents.compose_lib.layout.DraggableInsertLazyGrid
 import com.desaysv.hmicomponents.compose_lib.layout.OrderableItem
 import com.desaysv.hmicomponents.compose_lib.layout.orderable
@@ -43,7 +42,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SimpleDraggableInsertModifier() {
+fun SampleDraggableInsertModifier() {
 
 
     Column {

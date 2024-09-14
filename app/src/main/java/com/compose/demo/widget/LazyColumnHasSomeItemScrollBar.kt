@@ -23,12 +23,13 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.desaysv.jlr.scenarioengine.hmi.widget.container.SampleScrollBarState
 import kotlinx.coroutines.launch
 
 @Composable
 fun Modifier.LazyColumnSameItemScrollbar(
     state: LazyListState,
-    scrollBarState: SimpleScrollBarState,
+    scrollBarState: SampleScrollBarState,
     visibleAlpha: Float = 1f,
     hiddenAlpha: Float = 0f,
     footerHeight: Dp = 0.dp,
@@ -37,6 +38,7 @@ fun Modifier.LazyColumnSameItemScrollbar(
     fadeOutEdge: Boolean = false,
     fadeEdgeTop: Dp = 30.dp,
     fadeEdgeBottom: Dp = 30.dp,
+    spaceHeight: Dp = 0.dp
 ): Modifier {
 
     scrollBarState.alpha.value =
@@ -47,37 +49,39 @@ fun Modifier.LazyColumnSameItemScrollbar(
         }
     return alpha(if (fadeOutEdge) 0.99f else 1f).drawWithContent {
         drawContent()
-        val count = state.layoutInfo.totalItemsCount - footerCount
-        val itemHeight = state.layoutInfo.visibleItemsInfo.first().size
+        if (state.layoutInfo.totalItemsCount > 0) {
+            val count = state.layoutInfo.totalItemsCount - footerCount
+            val itemHeight = state.layoutInfo.visibleItemsInfo.first().size
 
-        var totalHeight =
-            count * itemHeight + footerHeight.toPx()
-        val offsetHeight =
-            (state.firstVisibleItemScrollOffset + state.firstVisibleItemIndex * itemHeight).toFloat()
+            var totalHeight =
+                count * (itemHeight + spaceHeight.toPx()) + footerHeight.toPx()
+            val offsetHeight =
+                (state.firstVisibleItemScrollOffset + state.firstVisibleItemIndex * (itemHeight + spaceHeight.toPx())).toFloat()
 
-        val a = state.layoutInfo.viewportSize.height - scrollBarHeight.toPx()
+            val a = state.layoutInfo.viewportSize.height - scrollBarHeight.toPx()
 
-        var x = a / (totalHeight - state.layoutInfo.viewportSize.height)
+            var x = a / (totalHeight - state.layoutInfo.viewportSize.height)
 
-        val offsetY =
-            if (offsetHeight > 0) (offsetHeight * x) else 0f
-        if (scrollBarState.isDragging.value == false) {
-            scrollBarState.offsetY.value = offsetY
-        }
-        if (fadeOutEdge) {
-            val top = fadeEdgeTop.toPx() / (state.layoutInfo.viewportSize.height)
-            val bottom = fadeEdgeBottom.toPx() / (state.layoutInfo.viewportSize.height)
-            //如果隐藏边缘属性设置为ture并且列表在滚动中，实现边缘渐隐效果
-            drawRect(
-                Brush.verticalGradient(
-                    Pair(0.0f, if (state.canScrollBackward) Color.Transparent else Color.Black),
-                    Pair(top, Color.Black),
-                    Pair(1f - bottom, Color.Black),
-                    Pair(1f, if (state.canScrollForward) Color.Transparent else Color.Black),
-                    startY = 0f,
-                    endY = state.layoutInfo.viewportSize.height.toFloat()
-                ), blendMode = BlendMode.DstIn
-            )
+            val offsetY =
+                if (offsetHeight > 0) (offsetHeight * x) else 0f
+            if (scrollBarState.isDragging.value == false) {
+                scrollBarState.offsetY.value = offsetY
+            }
+            if (fadeOutEdge) {
+                val top = fadeEdgeTop.toPx() / (state.layoutInfo.viewportSize.height)
+                val bottom = fadeEdgeBottom.toPx() / (state.layoutInfo.viewportSize.height)
+                //如果隐藏边缘属性设置为ture并且列表在滚动中，实现边缘渐隐效果
+                drawRect(
+                    Brush.verticalGradient(
+                        Pair(0.0f, if (state.canScrollBackward) Color.Transparent else Color.Black),
+                        Pair(top, Color.Black),
+                        Pair(1f - bottom, Color.Black),
+                        Pair(1f, if (state.canScrollForward) Color.Transparent else Color.Black),
+                        startY = 0f,
+                        endY = state.layoutInfo.viewportSize.height.toFloat()
+                    ), blendMode = BlendMode.DstIn
+                )
+            }
         }
     }
 }
@@ -91,8 +95,9 @@ fun Modifier.LazyColumnSameItemScrollbarView(
     fadeInAnimationDurationMs: Int = 150,
     fadeOutAnimationDurationMs: Int = 500,
     fadeOutAnimationDelayMs: Int = 4000,
-    scrollBarState: SimpleScrollBarState,
+    scrollBarState: SampleScrollBarState,
     scrollBarHeight: Dp = 115.dp,
+    spaceHeight: Dp = 0.dp
 ): Modifier {
 
     val density = LocalDensity.current.density
@@ -121,9 +126,9 @@ fun Modifier.LazyColumnSameItemScrollbarView(
         val itemHeight = state.layoutInfo.visibleItemsInfo.first().size
 
         var totalHeight =
-            count * itemHeight + footerHeight.value * density
+            count * (itemHeight + spaceHeight.value*density) + footerHeight.value * density
         val offsetHeight =
-            (state.firstVisibleItemScrollOffset + state.firstVisibleItemIndex * itemHeight).toFloat()
+            (state.firstVisibleItemScrollOffset + state.firstVisibleItemIndex * (itemHeight + spaceHeight.value*density)).toFloat()
 
         val a = state.layoutInfo.viewportSize.height - scrollBarHeight.value * density
 

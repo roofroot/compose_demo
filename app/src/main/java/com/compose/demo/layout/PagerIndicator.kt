@@ -71,7 +71,7 @@ fun OffsetPagerIndicator(
             }
         }, horizontalArrangement = horizontalArrangement
         )
-        if (isCirculate && pagerState.targetPage % count == 0 && pagerState.currentPage % count != 1) {
+        if (isCirculate && pagerState.targetPage % count == 0 && pagerState.settledPage % count != 1) {
             Box(
                 Modifier
                     .offset { IntOffset(0, 0) }
@@ -80,7 +80,7 @@ fun OffsetPagerIndicator(
             ) {
                 offsetContent()
             }
-        } else if (isCirculate && pagerState.targetPage % count == count - 1 && pagerState.currentPage % count != count - 2) {
+        } else if (isCirculate && pagerState.targetPage % count == count - 1 && pagerState.settledPage % count != count - 2) {
             val offset = (count - 1) * offsetWidth.value
             Box(
                 Modifier

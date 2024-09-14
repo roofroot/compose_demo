@@ -33,7 +33,7 @@ data class MyListData3(
 )
 
 @Composable
-fun SimplePanelLayout() {
+fun SamplePanelLayout() {
     val data = remember {
         mutableListOf<MyListData3>()
     }

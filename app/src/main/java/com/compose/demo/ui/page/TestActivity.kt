@@ -32,14 +32,14 @@ import com.compose.demo.ui.theme.mediumturquoise
 import com.compose.demo.ui.theme.pink
 import com.compose.demo.ui.theme.plum
 import com.compose.demo.widget.GradientText
-import com.desaysv.hmicomponents.compose.SimpleDraggableInsertLazyList
+import com.desaysv.hmicomponents.compose.SampleDraggableInsertLazyList
 
 enum class NavTag {
-    NavPage, SimpleScrollView, SimpleCirculatePager,
-    SimpleDraggableList, SimpleSeekbar, SimplePanelLayout,
-    SimpleShape, SimpleRefreshAndLoadMoreList, SimpleDraggableInsertList, SimpleSelectableList,
-    SimpleCustomTabRow, SimpleDropDownList, SimpleCurveChart, SimpleCircleProgress, SimpleCustomTheme,
-    SimpleGridView, SimpleCalendarView, SimpleNav, SimpleCustomTabColumn, SimpleScrollBar, SimpleBlurModifier
+    NavPage, SampleScrollView, SampleCirculatePager,
+    SampleDraggableList, SampleSeekbar, SamplePanelLayout,
+    SampleShape, SampleRefreshAndLoadMoreList, SampleDraggableInsertList, SampleSelectableList,
+    SampleCustomTabRow, SampleDropDownList, SampleCurveChart, SampleCircleProgress, SampleCustomTheme,
+    SampleGridView, SampleCalendarView, SampleNav, SampleCustomTabColumn, SampleScrollBar, SampleBlurModifier
 }
 
 class TestActivity : ComponentActivity() {
@@ -54,107 +54,107 @@ class TestActivity : ComponentActivity() {
                         NavPage(navTo)
                     }
                 }
-                composable(NavTag.SimpleScrollView.name) {
+                composable(NavTag.SampleScrollView.name) {
                     MyNavigation(controller = navController) { _, _ ->
                         SampleScrollView()
                     }
                 }
-                composable(NavTag.SimpleCirculatePager.name) {
+                composable(NavTag.SampleCirculatePager.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleCirculatePager()
+                        SampleCirculatePager()
                     }
                 }
-                composable(NavTag.SimpleDraggableList.name) {
+                composable(NavTag.SampleDraggableList.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleDraggableLazyList()
+                        SampleDraggableLazyList()
                     }
                 }
-                composable(NavTag.SimpleSeekbar.name) {
+                composable(NavTag.SampleSeekbar.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleSeekbar()
+                        SampleSeekbar()
                     }
                 }
-                composable(NavTag.SimplePanelLayout.name) {
+                composable(NavTag.SamplePanelLayout.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimplePanelLayout()
+                        SamplePanelLayout()
                     }
                 }
-                composable(NavTag.SimpleShape.name) {
+                composable(NavTag.SampleShape.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleShape()
+                        SampleShape()
                     }
                 }
-                composable(NavTag.SimpleRefreshAndLoadMoreList.name) {
+                composable(NavTag.SampleRefreshAndLoadMoreList.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleRefreshAndLoadList()
+                        SampleRefreshAndLoadList()
                     }
                 }
-                composable(NavTag.SimpleDraggableInsertList.name) {
+                composable(NavTag.SampleDraggableInsertList.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleDraggableInsertLazyList()
+                        SampleDraggableInsertLazyList()
                     }
                 }
-                composable(NavTag.SimpleSelectableList.name) {
+                composable(NavTag.SampleSelectableList.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleSelectableList()
+                        SampleSelectableList()
                     }
                 }
-                composable(NavTag.SimpleCustomTabRow.name) {
+                composable(NavTag.SampleCustomTabRow.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleCustomTabRow()
+                        SampleCustomTabRow()
                     }
                 }
-                composable(NavTag.SimpleDropDownList.name) {
+                composable(NavTag.SampleDropDownList.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleDropDownList()
+                        SampleDropDownList()
                     }
                 }
-                composable(NavTag.SimpleCurveChart.name) {
+                composable(NavTag.SampleCurveChart.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleCurveChart()
+                        SampleCurveChart()
                     }
                 }
-                composable(NavTag.SimpleCircleProgress.name) {
+                composable(NavTag.SampleCircleProgress.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleCircleProgress()
+                        SampleCircleProgress()
                     }
                 }
-                composable(NavTag.SimpleCustomTheme.name) {
+                composable(NavTag.SampleCustomTheme.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleTheme()
-                    }
-                }
-
-                composable(NavTag.SimpleGridView.name) {
-                    MyNavigation(controller = navController) { _, _ ->
-                        SimpleGridView()
-                    }
-                }
-                composable(NavTag.SimpleCalendarView.name) {
-                    MyNavigation(controller = navController) { _, _ ->
-                        SimpleCalendarView()
-                    }
-                }
-                composable(NavTag.SimpleNav.name) {
-                    MyNavigation(controller = navController) { _, _ ->
-                        SimpleNav()
-                    }
-                }
-                composable(NavTag.SimpleCustomTabColumn.name) {
-                    MyNavigation(controller = navController) { _, _ ->
-                        SimpleCustomTabColumn()
+                        SampleTheme()
                     }
                 }
 
-                composable(NavTag.SimpleScrollBar.name) {
+                composable(NavTag.SampleGridView.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleScrollBar()
+                        SampleGridView()
+                    }
+                }
+                composable(NavTag.SampleCalendarView.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SampleCalendarView()
+                    }
+                }
+                composable(NavTag.SampleNav.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SampleNav()
+                    }
+                }
+                composable(NavTag.SampleCustomTabColumn.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SampleCustomTabColumn()
                     }
                 }
 
-                composable(NavTag.SimpleBlurModifier.name) {
+                composable(NavTag.SampleScrollBar.name) {
                     MyNavigation(controller = navController) { _, _ ->
-                        SimpleBlurModifier()
+                        SampleScrollBar()
+                    }
+                }
+
+                composable(NavTag.SampleBlurModifier.name) {
+                    MyNavigation(controller = navController) { _, _ ->
+                        SampleBlurModifier()
                     }
                 }
 
@@ -173,19 +173,19 @@ fun NavPage(navTo: (tag: String) -> Unit) {
             when (it) {
                 0 -> {
                     Cards(
-                        navTag = NavTag.SimpleRefreshAndLoadMoreList,
+                        navTag = NavTag.SampleRefreshAndLoadMoreList,
                         text = "RefreshAndLoadMoreList",
                         navTo = navTo
                     )
                 }
 
                 1 -> {
-                    Cards(navTag = NavTag.SimpleScrollView, text = "ScrollView", navTo = navTo)
+                    Cards(navTag = NavTag.SampleScrollView, text = "ScrollView", navTo = navTo)
                 }
 
                 2 -> {
                     Cards(
-                        navTag = NavTag.SimpleCirculatePager,
+                        navTag = NavTag.SampleCirculatePager,
                         text = "CirculatePager",
                         navTo = navTo
                     )
@@ -193,23 +193,23 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 3 -> {
                     Cards(
-                        navTag = NavTag.SimpleDraggableList,
+                        navTag = NavTag.SampleDraggableList,
                         text = "DraggableLazyList",
                         navTo = navTo
                     )
                 }
 
                 4 -> {
-                    Cards(navTag = NavTag.SimpleSeekbar, text = "Seekbar", navTo = navTo)
+                    Cards(navTag = NavTag.SampleSeekbar, text = "Seekbar", navTo = navTo)
                 }
 
                 5 -> {
-                    Cards(navTag = NavTag.SimplePanelLayout, text = "PanelLayout", navTo = navTo)
+                    Cards(navTag = NavTag.SamplePanelLayout, text = "PanelLayout", navTo = navTo)
                 }
 
                 6 -> {
                     Cards(
-                        navTag = NavTag.SimpleCircleProgress,
+                        navTag = NavTag.SampleCircleProgress,
                         text = "CircleProgress",
                         navTo = navTo
                     )
@@ -217,7 +217,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 7 -> {
                     Cards(
-                        navTag = NavTag.SimpleShape,
+                        navTag = NavTag.SampleShape,
                         text = "CustomShape",
                         navTo = navTo
                     )
@@ -225,7 +225,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 8 -> {
                     Cards(
-                        navTag = NavTag.SimpleDraggableInsertList,
+                        navTag = NavTag.SampleDraggableInsertList,
                         text = "DraggableInsertList",
                         navTo = navTo
                     )
@@ -233,7 +233,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 9 -> {
                     Cards(
-                        navTag = NavTag.SimpleSelectableList,
+                        navTag = NavTag.SampleSelectableList,
                         text = "SelectableList",
                         navTo = navTo
                     )
@@ -241,7 +241,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 10 -> {
                     Cards(
-                        navTag = NavTag.SimpleCustomTabRow,
+                        navTag = NavTag.SampleCustomTabRow,
                         text = "CustomTabRow",
                         navTo = navTo
                     )
@@ -249,7 +249,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 11 -> {
                     Cards(
-                        navTag = NavTag.SimpleDropDownList,
+                        navTag = NavTag.SampleDropDownList,
                         text = "DropDownList",
                         navTo = navTo
                     )
@@ -257,7 +257,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 12 -> {
                     Cards(
-                        navTag = NavTag.SimpleCurveChart,
+                        navTag = NavTag.SampleCurveChart,
                         text = "CurveChart",
                         navTo = navTo
                     )
@@ -265,7 +265,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 13 -> {
                     Cards(
-                        navTag = NavTag.SimpleCustomTheme,
+                        navTag = NavTag.SampleCustomTheme,
                         text = "CustomTheme",
                         navTo = navTo
                     )
@@ -273,7 +273,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 14 -> {
                     Cards(
-                        navTag = NavTag.SimpleGridView,
+                        navTag = NavTag.SampleGridView,
                         text = "GridView",
                         navTo = navTo
                     )
@@ -281,7 +281,7 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 15 -> {
                     Cards(
-                        navTag = NavTag.SimpleCalendarView,
+                        navTag = NavTag.SampleCalendarView,
                         text = "CalendarView",
                         navTo = navTo
                     )
@@ -289,32 +289,32 @@ fun NavPage(navTo: (tag: String) -> Unit) {
 
                 16 -> {
                     Cards(
-                        navTag = NavTag.SimpleNav,
-                        text = "SimpleNav",
+                        navTag = NavTag.SampleNav,
+                        text = "SampleNav",
                         navTo = navTo
                     )
                 }
 
                 17 -> {
                     Cards(
-                        navTag = NavTag.SimpleCustomTabColumn,
-                        text = "SimpleCustomTabColumn",
+                        navTag = NavTag.SampleCustomTabColumn,
+                        text = "SampleCustomTabColumn",
                         navTo = navTo
                     )
                 }
 
                 18 -> {
                     Cards(
-                        navTag = NavTag.SimpleScrollBar,
-                        text = "SimpleScrollBar",
+                        navTag = NavTag.SampleScrollBar,
+                        text = "SampleScrollBar",
                         navTo = navTo
                     )
                 }
 
                 19 -> {
                     Cards(
-                        navTag = NavTag.SimpleBlurModifier,
-                        text = "SimpleBlurModifier",
+                        navTag = NavTag.SampleBlurModifier,
+                        text = "SampleBlurModifier",
                         navTo = navTo
                     )
                 }

@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SimpleShape() {
+fun SampleShape() {
     val pageState = rememberPagerState{3}
     val scope = rememberCoroutineScope()
     Column {
@@ -57,15 +57,15 @@ fun SimpleShape() {
         HorizontalPager(state = pageState) {
             when (it) {
                 0 -> {
-                    SimpleWaveBoarderShape()
+                    SampleWaveBoarderShape()
                 }
 
                 1 -> {
-                    SimplePentagramShape()
+                    SamplePentagramShape()
                 }
 
                 2 -> {
-                    SimpleFlowerShape()
+                    SampleFlowerShape()
                 }
             }
         }
@@ -74,7 +74,7 @@ fun SimpleShape() {
 }
 
 @Composable
-fun SimpleWaveBoarderShape() {
+fun SampleWaveBoarderShape() {
     Row() {
         Box(
             modifier = Modifier
@@ -112,7 +112,7 @@ fun SimpleWaveBoarderShape() {
 }
 
 @Composable
-fun SimplePentagramShape() {
+fun SamplePentagramShape() {
     Row {
         Box(
             modifier = Modifier
@@ -136,7 +136,7 @@ fun SimplePentagramShape() {
 }
 
 @Composable
-fun SimpleFlowerShape() {
+fun SampleFlowerShape() {
     Row {
         Box(
             Modifier

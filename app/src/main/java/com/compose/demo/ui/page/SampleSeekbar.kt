@@ -35,7 +35,7 @@ import com.compose.demo.widget.CustomSeekBar
 import com.compose.demo.widget.CustomStepSeekBar
 
 @Composable
-fun SimpleSeekbar() {
+fun SampleSeekbar() {
     val progress = remember {
         mutableStateOf(0)
     }

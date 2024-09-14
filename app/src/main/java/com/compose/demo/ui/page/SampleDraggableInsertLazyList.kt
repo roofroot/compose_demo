@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SimpleDraggableInsertLazyList() {
+fun SampleDraggableInsertLazyList() {
 
 
     Column {

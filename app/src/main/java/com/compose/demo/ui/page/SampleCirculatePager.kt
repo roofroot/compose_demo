@@ -33,7 +33,7 @@ import com.google.accompanist.coil.rememberCoilPainter
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SimpleCirculatePager() {
+fun SampleCirculatePager() {
     val list = listOf(
         R.mipmap.img_0,
         R.mipmap.img_1,

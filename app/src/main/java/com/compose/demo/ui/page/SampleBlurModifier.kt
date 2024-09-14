@@ -37,7 +37,7 @@ import com.google.accompanist.coil.rememberCoilPainter
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun SimpleBlurModifier() {
+fun SampleBlurModifier() {
 
     val data = remember {
         mutableListOf<MyListData>()

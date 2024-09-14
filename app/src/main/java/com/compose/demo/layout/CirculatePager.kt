@@ -9,7 +9,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,42 +32,47 @@ fun <T> CirculatePager(
     val isOnUserInput = remember {
         mutableStateOf(false)
     }
-    LaunchedEffect(autoScrollState) {
+    DisposableEffect(autoScrollState) {
+        val job = scope.launch {
+            while (autoScrollState) {
+                try {
+                    delay(3000)
+                    if (!isOnUserInput.value && !pagerState.isScrollInProgress) {
+                        //需要放到scope中防止异常情况停止
+                        scope.launch {
+                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        }
+                    }
+                } catch (e: Exception) {
+                    break;
+                    Log.e("autoScrollState", "${e.message}")
+                }
+            }
 
-        while (autoScrollState) {
-            try {
-                delay(3000)
-                Log.e("autoScrollState", "${pagerState.isScrollInProgress},${isOnUserInput.value}")
-                if (!isOnUserInput.value && !pagerState.isScrollInProgress) {
-                    scope.launch {
-                        //需要放到scope防止出现异常，导致循环退出
-                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+        }
+        val job2 = scope.launch {
+            pagerState.interactionSource.interactions.collect {
+                when (it) {
+                    is DragInteraction.Start -> {
+                        isOnUserInput.value = true
+                        //在按下手指时停止自动滚动
+                    }
+
+                    is DragInteraction.Stop -> {
+                        isOnUserInput.value = false
+                        //在抬起手指时如果当前没有自动滚动，开始自动滚动
+                    }
+
+                    is DragInteraction.Cancel -> {
+                        isOnUserInput.value = false
+                        //在抬起手指时如果当前没有自动滚动，开始自动滚动
                     }
                 }
-            } catch (e: Exception) {
-                Log.e("autoScrollState", "${e.message}")
             }
         }
-
-    }
-    LaunchedEffect(key1 = Unit) {
-        pagerState.interactionSource.interactions.collect {
-            when (it) {
-                is DragInteraction.Start -> {
-                    isOnUserInput.value = true
-                    //在按下手指时停止自动滚动
-                }
-
-                is DragInteraction.Stop -> {
-                    isOnUserInput.value = false
-                    //在抬起手指时如果当前没有自动滚动，开始自动滚动
-                }
-
-                is DragInteraction.Cancel -> {
-                    isOnUserInput.value = false
-                    //在抬起手指时如果当前没有自动滚动，开始自动滚动
-                }
-            }
+        onDispose {
+            job.cancel()
+            job2.cancel()
         }
     }
     HorizontalPager(modifier = Modifier.motionEventSpy {

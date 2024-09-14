@@ -55,7 +55,7 @@ fun Home(
 }
 
 @Composable
-fun SimpleTheme() {
+fun SampleTheme() {
     val navController = rememberNavController()
     TestTheme { themeChange, languageChange ->
 

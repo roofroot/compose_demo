@@ -43,7 +43,7 @@ data class MyListData2(val color: Color, val number: String, val iconRes: Int, v
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SimpleDraggableLazyList() {
+fun SampleDraggableLazyList() {
 
 
     Column {

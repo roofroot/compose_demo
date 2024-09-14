@@ -24,7 +24,7 @@ import com.compose.demo.layout.CustomTabRow
 import kotlin.random.Random
 
 @Composable
-fun SimpleCustomTabRow() {
+fun SampleCustomTabRow() {
     val list = ArrayList<String>()
 //    for (i in 0..5) {
 //        list.add("item ${i} ${Random.nextInt(100000)/i}")

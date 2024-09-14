@@ -1,4 +1,4 @@
-package com.compose.demo.widget
+package com.desaysv.jlr.scenarioengine.hmi.widget.container
 
 import android.annotation.SuppressLint
 import android.view.MotionEvent
@@ -17,10 +17,10 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
@@ -48,7 +48,6 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -113,42 +112,36 @@ fun ScrollView(
 @Composable
 fun Modifier.scrollbar(
     state: ScrollState,
-    scrollBarState: SimpleScrollBarState,
+    scrollBarState: SampleScrollBarState,
     visibleAlpha: Float = 1f,
     hiddenAlpha: Float = 0f,
-    scrollBarWidth: Dp = 5.dp,
     scrollBarHeight: Dp = 115.dp,
-    showScrollTrack: Boolean = false,
-    bgColor: Color = Color.Gray,
-    scrollTrackWidth: Dp = 1.dp,
-    fadeOutEdge: Boolean = false,
-    fadeEdgeTop: Dp = 10.dp,
-    fadeEdgeBottom: Dp = 30.dp,
 ): Modifier {
-
     val density = LocalDensity.current.density
     return motionEventSpy {
         if (it.action == MotionEvent.ACTION_MOVE) {
-            if (state.canScrollForward || state.canScrollBackward) {
+            if (state.maxValue != Int.MAX_VALUE && state.maxValue > 0) {
                 scrollBarState.alpha.value = visibleAlpha
             }
-            if (scrollBarState.isDragging.value == false && state.maxValue > 0) {
-                val a = scrollBarState.viewPortHeight.value - scrollBarHeight.value * density
-                //这一行的好意思是 视口的高度减去进度条的高度
-                var x = a / (state.maxValue)
-                //用这个值除以控件总高度减去视口的高度， 就可以得到我们窗口实际滚动的距离与进度条实际可以滚动的范围的一个比例
-                val offsetY = state.value * x
-                scrollBarState.offsetY.value = offsetY
-            }
         } else if (it.action == MotionEvent.ACTION_UP) {
+            scrollBarState.alpha.value = hiddenAlpha
+        } else if (it.action == MotionEvent.ACTION_CANCEL) {
             scrollBarState.alpha.value = hiddenAlpha
         }
     }
         .onSizeChanged {
             scrollBarState.viewHeight.value = it.height.toFloat()
         }
-//        .drawWithContent {
-//            drawContent()
+        .drawWithContent {
+            drawContent()
+            if (!scrollBarState.isDragging.value && state.maxValue != 0 && state.maxValue != Int.MAX_VALUE && state.maxValue > 0) {
+            val a = scrollBarState.viewPortHeight.value - scrollBarHeight.value * density
+            //这一行的好意思是 视口的高度减去进度条的高度
+            var x = a / (state.maxValue)
+            //用这个值除以控件总高度减去视口的高度， 就可以得到我们窗口实际滚动的距离与进度条实际可以滚动的范围的一个比例
+            val offsetY = state.value * x
+            scrollBarState.offsetY.value = offsetY
+        }
 //            if (showScrollTrack) {
 //                drawLine(
 //                    color = bgColor, start = Offset(
@@ -175,7 +168,7 @@ fun Modifier.scrollbar(
 //                    ), blendMode = BlendMode.DstIn
 //                )
 //            }
-//        }
+        }
 }
 
 @Composable
@@ -209,7 +202,7 @@ fun Modifier.fadeOutEdge(
 @Composable
 fun Modifier.scrollbarView(
     state: ScrollState,
-    scrollBarState: SimpleScrollBarState,
+    scrollBarState: SampleScrollBarState,
     scrollBarHeight: Dp = 115.dp,
 
     ): Modifier {
@@ -256,14 +249,14 @@ fun Modifier.scrollbarView(
 }
 
 @Composable
-fun getSimpleScrollBarState(
+fun getSampleScrollBarState(
     visibleAlpha: Float = 1f,
     fadeInAnimationDurationMs: Int = 150,
     fadeOutAnimationDurationMs: Int = 500,
     fadeOutAnimationDelayMs: Int = 4000,
-): SimpleScrollBarState {
+): SampleScrollBarState {
     val scrollBarState = remember {
-        mutableStateOf(SimpleScrollBarState())
+        mutableStateOf(SampleScrollBarState())
     }
     scrollBarState.value.offsetY = remember {
         mutableStateOf(0f)
@@ -297,7 +290,7 @@ fun getSimpleScrollBarState(
     return scrollBarState.value
 }
 
-class SimpleScrollBarState {
+class SampleScrollBarState {
     lateinit var offsetY: MutableState<Float>
     lateinit var isDragging: MutableState<Boolean>
     lateinit var viewHeight: MutableState<Float>
@@ -307,7 +300,7 @@ class SimpleScrollBarState {
 }
 
 @Composable
-fun Modifier.parentScrollBar(scrollBarState: SimpleScrollBarState): Modifier {
+fun Modifier.parentScrollBar(scrollBarState: SampleScrollBarState): Modifier {
     return onSizeChanged {
         scrollBarState.viewPortHeight.value = it.height.toFloat()
     }
@@ -318,14 +311,14 @@ fun BoxScope.SimpleScrollBar(modifier: Modifier, isDragging: Boolean) {
     Box(
         modifier = modifier
             .align(Alignment.TopEnd)
-            .width(25.dp)
-            .height(115.dp)
-            .padding(start = 10.dp, end = 10.dp),
+            .width(45.dp)
+            .height(115.dp),
         contentAlignment = Alignment.Center
     ) {
         Box(
             Modifier
-                .fillMaxSize()
+                .width(5.dp)
+                .fillMaxHeight()
                 .background(
                     if (isDragging) Color.Black else Color(0xFF86776C),
                     shape = RoundedCornerShape(2.5f)

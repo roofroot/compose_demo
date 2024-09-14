@@ -31,11 +31,10 @@ import com.compose.demo.layout.MultipleSelectableList
 import com.compose.demo.layout.SingleSelectableList
 import com.compose.demo.layout.rememberSelectableListState
 import kotlinx.coroutines.launch
-import java.util.ArrayList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SimpleSelectableList() {
+fun SampleSelectableList() {
     val list = ArrayList<String>()
     for (i in 1..100) {
         list.add("test item ${i}")

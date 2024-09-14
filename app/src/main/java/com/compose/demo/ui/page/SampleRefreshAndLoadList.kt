@@ -23,7 +23,7 @@ import com.google.accompanist.coil.rememberCoilPainter
 import kotlinx.coroutines.delay
 
 @Composable
-fun SimpleRefreshAndLoadList() {
+fun SampleRefreshAndLoadList() {
     val data = remember {
         mutableListOf<MyListData>()
     }

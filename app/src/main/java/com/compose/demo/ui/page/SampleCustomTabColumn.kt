@@ -23,10 +23,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.compose.demo.layout.CustomTabColumn
-import com.compose.demo.layout.CustomTabRow
-
 @Composable
-fun SimpleCustomTabColumn() {
+fun SampleCustomTabColumn() {
     val list = ArrayList<String>()
     for (i in 0..5) {
         list.add("item ${i}")

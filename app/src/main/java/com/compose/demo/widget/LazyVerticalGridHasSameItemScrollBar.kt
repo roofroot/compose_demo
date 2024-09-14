@@ -11,94 +11,63 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.boundsInParent
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
+import com.desaysv.jlr.scenarioengine.hmi.widget.container.SampleScrollBarState
 import kotlinx.coroutines.launch
 
-
-//用于需要动态计算整体高度的列表
 @Composable
-fun Modifier.LazyGridScrollbar(
+fun Modifier.gridScrollbarSameItem(
     state: LazyGridState,
+    scrollBarState: SampleScrollBarState,
     visibleAlpha: Float = 1f,
     hiddenAlpha: Float = 0f,
-    scrollBarState: LazyGridScrollBarState,
+    cols: Int = 2,
+    footerHeight: Dp = 0.dp,
+    footerCount: Int = 0,
     scrollBarHeight: Dp = 115.dp,
     fadeOutEdge: Boolean = false,
-    fadeEdgeTop: Dp = 10.dp,
+    fadeEdgeTop: Dp = 30.dp,
     fadeEdgeBottom: Dp = 30.dp,
+    spaceHeight: Dp = 0.dp
 ): Modifier {
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(10)
-            if (state.layoutInfo.totalItemsCount > 0) {
-                delay(500)
-                val firstVisible = state.layoutInfo.visibleItemsInfo.first()
-                for (i in 1..state.layoutInfo.totalItemsCount) {
-                    state.scrollToItem(i)
-                }
-                state.scrollToItem(firstVisible.index, -firstVisible.offset.y)
-                break
-            }
-        }
-    }
     scrollBarState.alpha.value =
         if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward) || scrollBarState.isDragging.value) {
             visibleAlpha
         } else {
             hiddenAlpha
         }
-
     return alpha(if (fadeOutEdge) 0.99f else 1f).drawWithContent {
         drawContent()
-        var totalHeight = 0f
-        var offsetOne = 0f
-        var offsetIndex = 0
-        var offsetHeight = 0f
-        scrollBarState.childRectMap.toList().forEach {
-            val rect = it.second
-            if (it.first >= offsetIndex && rect.top < 0
-                && it.first < state.firstVisibleItemIndex + state.layoutInfo.visibleItemsInfo.size
-            ) {
-                offsetOne = -rect.top
-                offsetIndex = it.first
-            }
-            totalHeight += rect.height
-        }
+        val count = state.layoutInfo.totalItemsCount - footerCount
+        val itemHeight =
+            if (!state.layoutInfo.visibleItemsInfo.isNullOrEmpty()) state.layoutInfo.visibleItemsInfo.first().size.height.toFloat() else 0f
 
-        scrollBarState.childRectMap.forEach { (i, rect) ->
-            if (i < offsetIndex) {
-                offsetHeight += rect.height
-            }
-        }
-        offsetHeight += offsetOne
+        var totalHeight =
+            (count / cols + if (count % cols == 0) 0 else 1) * itemHeight + footerHeight.toPx() + ((count / cols + if (count % cols == 0) 0 else 1) - 1 + footerCount) * spaceHeight.toPx()
+        val offsetHeight =
+            (state.firstVisibleItemScrollOffset + state.firstVisibleItemIndex / cols * (itemHeight + spaceHeight.toPx())).toFloat()
 
-        val a = size.height - scrollBarHeight.toPx()
+        val a = state.layoutInfo.viewportSize.height - scrollBarHeight.toPx()
 
-        var x = a / (totalHeight - size.height)
+        var x = a / (totalHeight - state.layoutInfo.viewportSize.height)
 
         val offsetY =
             if (offsetHeight > 0) (offsetHeight * x) else 0f
+        if (scrollBarState.isDragging.value == false) {
+            scrollBarState.offsetY.value = offsetY
+        }
         if (fadeOutEdge) {
             val top = fadeEdgeTop.toPx() / (state.layoutInfo.viewportSize.height)
             val bottom = fadeEdgeBottom.toPx() / (state.layoutInfo.viewportSize.height)
@@ -114,23 +83,25 @@ fun Modifier.LazyGridScrollbar(
                 ), blendMode = BlendMode.DstIn
             )
         }
-        if (scrollBarState.isDragging.value == false) {
-            scrollBarState.offsetY.value = offsetY
-        }
     }
 }
 
 @SuppressLint("ModifierFactoryUnreferencedReceiver")
 @Composable
-fun Modifier.LazyGridScrollbarView(
+fun Modifier.gridScrollbarSameItemView(
     state: LazyGridState,
+    footerCount: Int = 0,
+    footerHeight: Dp = 0.dp,
+    cols: Int = 2,
     fadeInAnimationDurationMs: Int = 150,
     fadeOutAnimationDurationMs: Int = 500,
     fadeOutAnimationDelayMs: Int = 4000,
-    scrollBarState: LazyGridScrollBarState,
-    scrollBarHeight: Dp = 115.dp,
+    scrollBarState: SampleScrollBarState,
+    scrollBarHeight: Dp,
+    spaceHeight: Dp = 0.dp
 ): Modifier {
 
+    val density = LocalDensity.current.density
     val animationDurationMs =
         if (state.isScrollInProgress && (state.canScrollForward || state.canScrollBackward)) {
             fadeInAnimationDurationMs
@@ -143,7 +114,6 @@ fun Modifier.LazyGridScrollbarView(
         } else {
             fadeOutAnimationDelayMs
         }
-    val density = LocalDensity.current.density
     val alpha by
     animateFloatAsState(
         targetValue = scrollBarState.alpha.value,
@@ -153,33 +123,18 @@ fun Modifier.LazyGridScrollbarView(
 
     val scope = rememberCoroutineScope()
     val draggableState = rememberDraggableState { delta ->
-        var totalHeight = 0f
-        var offsetOne = 0f
-        var offsetIndex = 0
-        var offsetHeight = 0f
-        scrollBarState.childRectMap
-            .toList()
-            .forEach {
-                val rect = it.second
-                if (it.first >= offsetIndex && rect.top < 0
-                    && it.first < state.firstVisibleItemIndex + state.layoutInfo.visibleItemsInfo.size
-                ) {
-                    offsetOne = -rect.top
-                    offsetIndex = it.first
-                }
-                totalHeight += rect.height
-            }
-        scrollBarState.childRectMap.forEach { (i, rect) ->
-            if (i < offsetIndex) {
-                offsetHeight += rect.height
-            }
-        }
-        offsetHeight += offsetOne
+        val count = state.layoutInfo.totalItemsCount - footerCount
+        val itemHeight = state.layoutInfo.visibleItemsInfo.first().size.height.toFloat()
+
+//        var totalHeight =
+//            (count / cols + if (count % cols == 0) 0 else 1) * itemHeight + footerHeight.value * density
+        var totalHeight =
+            (count / cols + if (count % cols == 0) 0 else 1) * itemHeight + footerHeight.value * density + ((count / cols + if (count % cols == 0) 0 else 1) - 1 + footerCount) * spaceHeight.value * density
 
         val a = state.layoutInfo.viewportSize.height - scrollBarHeight.value * density
 
         var x = a / (totalHeight - state.layoutInfo.viewportSize.height)
-
+        //用这个值除以控件总高度减去视口的高度， 就可以得到我们窗口实际滚动的距离与进度条实际可以滚动的范围的一个比例
         if (state.canScrollForward && delta > 0 || state.canScrollBackward && delta < 0) {
             if (scrollBarState.offsetY.value + delta < 0) {
                 scrollBarState.offsetY.value = 0f
@@ -207,41 +162,4 @@ fun Modifier.LazyGridScrollbarView(
             scrollBarState.isDragging.value = false
         })
         .alpha(alpha)
-}
-
-@Composable
-fun Modifier.LazyGriditemScrollBar(
-    key: Int,
-    scrollBarState: LazyGridScrollBarState
-): Modifier {
-    return onPlaced {
-        scrollBarState.childRectMap.put(key, it.boundsInParent())
-    }
-}
-
-@Composable
-fun getLazyGridScrollBarState(): LazyGridScrollBarState {
-    val scrollBarState = remember {
-        mutableStateOf(LazyGridScrollBarState())
-    }
-    scrollBarState.value.childRectMap = remember {
-        mutableStateMapOf()
-    }
-    scrollBarState.value.offsetY = remember {
-        mutableStateOf(0f)
-    }
-    scrollBarState.value.isDragging = remember {
-        mutableStateOf(false)
-    }
-    scrollBarState.value.alpha = remember {
-        mutableStateOf(0f)
-    }
-    return scrollBarState.value
-}
-
-class LazyGridScrollBarState {
-    lateinit var childRectMap: MutableMap<Int, Rect>
-    lateinit var offsetY: MutableState<Float>
-    lateinit var isDragging: MutableState<Boolean>
-    lateinit var alpha: MutableState<Float>
 }

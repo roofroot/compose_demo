@@ -1,7 +1,6 @@
 package com.compose.demo.ui.page
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,7 +18,7 @@ import com.compose.demo.widget.CircleProgress
 import com.compose.demo.widget.CustomSeekBar
 
 @Composable
-fun SimpleCircleProgress() {
+fun SampleCircleProgress() {
     val currentProgress = remember {
         mutableStateOf(0)
     }

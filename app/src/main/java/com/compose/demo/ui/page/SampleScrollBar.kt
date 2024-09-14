@@ -24,13 +24,13 @@ import androidx.compose.ui.unit.dp
 import com.compose.demo.R
 import com.compose.demo.widget.LazyColumnSameItemScrollbar
 import com.compose.demo.widget.LazyColumnSameItemScrollbarView
-import com.compose.demo.widget.SimpleScrollBar
-import com.compose.demo.widget.getSimpleScrollBarState
+import com.desaysv.jlr.scenarioengine.hmi.widget.container.SimpleScrollBar
+import com.desaysv.jlr.scenarioengine.hmi.widget.container.getSampleScrollBarState
 import com.google.accompanist.coil.rememberCoilPainter
 
 
 @Composable
-fun SimpleScrollBar() {
+fun SampleScrollBar() {
 
     val data = remember {
         mutableListOf<MyListData>()
@@ -58,7 +58,7 @@ fun SimpleScrollBar() {
 @Composable
 private fun list(data: List<MyListData>) {
     val state = rememberLazyListState()
-    val scrollBarState = getSimpleScrollBarState()
+    val scrollBarState = getSampleScrollBarState()
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier

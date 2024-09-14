@@ -13,7 +13,7 @@ import com.compose.demo.widget.StepColor
 import kotlin.random.Random
 
 @Composable
-fun SimpleCurveChart() {
+fun SampleCurveChart() {
     val list = ArrayList<Point>()
     var a = 0
     while (a < 1500) {
