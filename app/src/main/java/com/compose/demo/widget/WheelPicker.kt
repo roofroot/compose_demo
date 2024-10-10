@@ -3,15 +3,19 @@ package com.compose.demo.widget
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -27,6 +31,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
@@ -189,4 +194,34 @@ private fun <T> getScale(
         }
     }
     return scale
+}
+@Composable
+private fun ItemMarkLine(itemHeight: Dp, state: MutableState<Int>, index: Int, size: Int) {
+    Box(
+        Modifier
+            .width(55.dp)
+            .height(itemHeight)
+    ) {
+        Spacer(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .height(2.dp)
+                .width(39.dp)
+                .background(
+                    Color.Blue,
+                    shape = RoundedCornerShape(1.dp)
+                )
+        )
+        if (state.value != 1 && index != size - 1) {
+            Spacer(
+                modifier = Modifier
+                    .alpha(0.2f)
+                    .align(Alignment.BottomStart)
+                    .height(2.dp)
+                    .width(25.dp)
+                    .background(Color.Blue, RoundedCornerShape(1.dp))
+            )
+        }
+
+    }
 }
